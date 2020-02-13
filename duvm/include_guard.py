@@ -11,7 +11,11 @@ from duvm import filters
 
 class IncludeGuard(filters.LineListener):
     """Check for the presence of an include guard.
-
+    Expecting:
+      `ifndef __<FILENAME>__
+        `define __<FILENAME>__
+       ...   
+      `endif // guard
     """
     subscribe_to = [filters.TestLineBroadcaster,
                     filters.UVCLineBroadcaster]
@@ -31,6 +35,7 @@ class IncludeGuard(filters.LineListener):
         self._looking_for_endif = False
         self._guard_value = None
         self._endif_value = None
+        self._saw_at_least_one_line = False
 
     def is_guard_value_legal(self):
         """Compare to see if the guard value is an expected format.
@@ -46,6 +51,7 @@ class IncludeGuard(filters.LineListener):
         return False
 
     def _update(self, line_no, line):
+        self._saw_at_least_one_line = True
         # TODO handle block comment
         if self._in_first_comment:
             self._in_first_comment = self.line_is_comment_or_empty_re.search(line)
@@ -85,6 +91,8 @@ class IncludeGuard(filters.LineListener):
                 self._endif_value = match.group(2)
 
     def eof(self):
+        if not self._saw_at_least_one_line:
+            return
         if self._looking_for_ifndef:
             self.error(None, None, "Expected an include guard `ifndef directive in the first non-comment, non-blank line of the file.")
             return

@@ -63,8 +63,12 @@ class UVCLineBroadcaster(lw.Broadcaster, lw.Listener):
         try:
             inside_uvc = self.memoized_directories[dirname]
         except KeyError:
-            expected_pkg_name = "{}_pkg.sv".format(os.path.basename(dirname))
-            expected_pkg_path = os.path.join(dirname, expected_pkg_name)
+            expected_pkg_name = os.path.basename(dirname)
+            if expected_pkg_name.endswith("_pkg"):
+                # Allow directories to have "_pkg" suffix
+                expected_pkg_name = expected_pkg_name[:-4]
+            expected_pkg_filename = "{}_pkg.sv".format(expected_pkg_name)
+            expected_pkg_path = os.path.join(dirname, expected_pkg_filename)
             inside_uvc = os.path.exists(expected_pkg_path)
             self.memoized_directories[dirname] = inside_uvc
         if not inside_uvc:
