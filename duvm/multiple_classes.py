@@ -68,8 +68,14 @@ class MultipleClasses(filters.LineListener):
         primary_c = None
 
         for c in self.sv_classes:
-            class_base_name = class_name_regex.search(c.name).group(1)
+            match = class_name_regex.search(c.name)
+            if match:
+                class_base_name = match.group(1)
+            else:
+                class_base_name = c.name
+
             if class_base_name in file_base_name:
+                # Primary class in file, allowed to be large
                 primary_c = c
             else:
                 size = c.end_line_no - c.begin_line_no
