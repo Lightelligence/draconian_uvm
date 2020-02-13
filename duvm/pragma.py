@@ -4,9 +4,8 @@
 # Python Imports
 import re
 # Lintwork Imports
-import lintworks.base as lw
 # Draconian UVM imports
-from . import filters
+from duvm import filters
 
 class Pragma(filters.LineListener):
     """

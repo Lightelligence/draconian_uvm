@@ -6,7 +6,7 @@ import os
 import re
 # Lintwork Imports
 # Draconian UVM imports
-from . import filters
+from duvm import filters
 
 
 class IncludeGuard(filters.LineListener):

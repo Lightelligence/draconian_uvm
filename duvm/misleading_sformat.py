@@ -4,7 +4,7 @@
 import re
 # Lintwork Imports
 # Draconian UVM imports
-from . import filters
+from duvm import filters
 
 class MisleadingSformat(filters.LineListener):
     """Catch misleading print statemetns.

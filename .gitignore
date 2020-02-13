@@ -1,5 +1,2 @@
 *~
-/draconian_uvm/__pycache__/
-/tests/__pycache__/context.cpython-37.pyc
-/__pycache__/
-/tests/__pycache__/
+bazel*

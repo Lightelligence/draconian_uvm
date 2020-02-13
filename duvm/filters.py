@@ -5,8 +5,8 @@
 import os
 import re
 
-from lintworks import linebase as lb
-from lintworks import base as lw
+from lw import linebase as lb
+from lw import base as lw
 
 class LineBroadcaster(lb.LineBroadcaster):
     pass

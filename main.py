@@ -2,8 +2,8 @@ import argparse
 import logging
 import sys
 
-import draconian_uvm
-
+import duvm.all
+import duvm.filters
 
 class ReportServer(object):
 
@@ -15,7 +15,7 @@ class ReportServer(object):
     
     @staticmethod
     def _setup_log():
-        log = logging.getLogger("draconian_uvm")
+        log = logging.getLogger("duvm")
         return log
 
     def error(self, listener, line_no, line, message):
@@ -74,7 +74,7 @@ def main(argv):
 
     for fname in gc.options.files:
         with open(fname) as fstream:
-            lbc = draconian_uvm.filters.LineBroadcaster(fname, fstream, parent=None, gc=gc)
+            lbc = duvm.filters.LineBroadcaster(fname, fstream, parent=None, gc=gc)
 
     return gc.rs.error_count > 0
     
