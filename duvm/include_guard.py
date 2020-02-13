@@ -107,12 +107,12 @@ class IncludeGuard(filters.LineListener):
 
 
     def error(self, line_no, line, message):
-        self._update = None # Stop looking for more errors
+        self.disable()
+        self.update_testline = None
+        self.update_uvcline = None
         self.eof = None # The errors in the eof step can be misleading if
                         # previous errors have occurred.
         super(IncludeGuard, self).error(line_no, line, message)
         
     update_testline = _update
     update_uvcline = _update
-
-    
