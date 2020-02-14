@@ -38,6 +38,24 @@ class IncludeGuardTestCase(test.TestCase):
             iut = self.get_listener(lb, self.cut)
             iut.error.assert_not_called()
 
+    def test_header_block_comment(self):
+        """Adding a comment and whitespace header."""
+        content = StringIO("""/*Default header
+
+        Commented code
+        */
+        // Has some newlines, whitespace and comments
+          // and poor indentation
+        `ifndef __BASE_TEST_SV__
+         `define __BASE_TEST_SV__
+        `endif // guard
+        """)
+        with mock.patch.object(self.cut, "error", autospec=True):
+            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            iut = self.get_listener(lb, self.cut)
+            iut.error.assert_not_called()
+
+
     def test_code_before_guard(self):
         content = StringIO("""// Default Header
         `include "rtl_defines.vh"

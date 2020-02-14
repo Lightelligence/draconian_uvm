@@ -40,6 +40,8 @@ class IncludeGuard(filters.LineListener):
         self._guard_value = None
         self._endif_value = None
         self._saw_at_least_one_line = False
+        self._in_block_comment = False
+
 
     def is_guard_value_legal(self):
         """Compare to see if the guard value is an expected format.
@@ -56,13 +58,23 @@ class IncludeGuard(filters.LineListener):
 
     def _update(self, line_no, line):
         self._saw_at_least_one_line = True
+
         # TODO handle block comment
-        if self._in_first_comment:
-            self._in_first_comment = self.line_is_comment_or_empty_re.search(line)
-            if self._in_first_comment:
+        if self._in_first_comment or self._in_block_comment:
+            if self.line_is_comment_or_empty_re.search(line):
                 return
-            else:
-                self._looking_for_ifndef = True
+            block_comment_start = re.search("/\*", line)
+            if block_comment_start:
+                self._in_block_comment = True
+                if re.search("\*/", line[block_comment_start.end():]):
+                    self._in_block_comment = False
+                    return
+            if self._in_block_comment:
+                if re.search("\*/", line):
+                    self._in_block_comment = False
+                return
+            self._in_first_comment = False
+            self._looking_for_ifndef = True
 
         if self._looking_for_ifndef:
             match = self.ifndef_re.search(line)
