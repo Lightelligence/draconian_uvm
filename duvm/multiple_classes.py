@@ -30,6 +30,8 @@ class MultipleClasses(filters.LineListener):
 
     size_threshold = 100
 
+    exempt_files_re = re.compile("_((vseq)|(seq)|(seq_lib))\.sv[h]?")
+
     class svclass(object):
         def __init__(self, name, begin_line_no, begin_line):
             self.name = name
@@ -40,12 +42,11 @@ class MultipleClasses(filters.LineListener):
 
     def __init__(self, filename, fstream, *args, **kwargs):
         super(MultipleClasses, self).__init__(filename, fstream, *args, **kwargs)
+        if self.exempt_files_re.search(filename):
+            self.disable()
         self.sv_classes = []
         self.current_class = None
         self.eof_called = False
-        if re.search("seq_lib", filename):
-            self.update_beginclass = None
-            self.update_endclass = None
 
     def update_beginclass(self, line_no, line, match):
         self.current_class = self.svclass(match.group('name'), line_no, line)
