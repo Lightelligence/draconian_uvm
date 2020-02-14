@@ -50,7 +50,7 @@ class IncludeGuard(filters.LineListener):
           __<FILENAME>
           __<FILENAME>__
         """
-        filename_piece = re.sub("[^A-Z_]", "_", os.path.basename(self.filename).upper())
+        filename_piece = re.sub("[^A-Z0-9_]", "_", os.path.basename(self.filename).upper())
         if self._guard_value in ["__{}".format(filename_piece),
                                  "__{}__".format(filename_piece)]:
             return True
