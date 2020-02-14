@@ -26,9 +26,13 @@ class IncludeGuard(filters.LineListener):
     define_re = re.compile("^\s*`define\s+(\S+)")    
     endif_re = re.compile("^\s*`endif(\s*//\s*(.*))")
 
+    exempt_files_re = re.compile("_intf.sv[h]?")
+
     def __init__(self, filename, fstream, *args, **kwargs):
         super(IncludeGuard, self).__init__(filename, fstream, *args, **kwargs)
         self.filename = filename
+        if self.exempt_files_re.search(filename):
+            self.disable()
         self._in_first_comment = True
         self._looking_for_ifndef = False
         self._looking_for_define = False
