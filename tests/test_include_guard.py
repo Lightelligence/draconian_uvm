@@ -2,9 +2,8 @@ import unittest
 from unittest import mock
 from io import StringIO
 
-from context import draconian_uvm
-from draconian_uvm import filters
-from draconian_uvm.include_guard import IncludeGuard
+from duvm import filters
+from duvm.include_guard import IncludeGuard
 
 import test
 

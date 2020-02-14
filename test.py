@@ -1,5 +1,5 @@
 import unittest
-import lintworks
+import lw
 
 class TestCase(unittest.TestCase):
 
@@ -22,10 +22,8 @@ class TestCase(unittest.TestCase):
         for listener in broadcaster.listener_instances:
             if isinstance(listener, listener_type):
                 return listener
-            if isinstance(listener, lintworks.base.Broadcaster):
+            if isinstance(listener, lw.base.Broadcaster):
                 gl = self.get_listener(listener, listener_type)
                 if gl:
                     return gl
         return None
-
-

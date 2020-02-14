@@ -2,8 +2,7 @@ import unittest
 from unittest import mock
 from io import StringIO
 
-from context import draconian_uvm
-from draconian_uvm import filters
+from duvm import filters
 
 import test
 

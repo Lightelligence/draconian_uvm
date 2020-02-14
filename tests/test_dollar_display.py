@@ -2,9 +2,8 @@ import unittest
 from unittest import mock
 from io import StringIO
 
-from context import draconian_uvm
-from draconian_uvm import filters
-from draconian_uvm.dollar_display import DollarDisplay
+from duvm import filters
+from duvm.dollar_display import DollarDisplay
 
 import test
 
