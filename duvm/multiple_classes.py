@@ -52,6 +52,9 @@ class MultipleClasses(filters.LineListener):
         self.current_class = self.svclass(match.group('name'), line_no, line)
 
     def update_endclass(self, line_no, line, match):
+        if self.current_class is None:
+            self.error(line_no, line, "Saw endclass before class definition")
+            return
         self.current_class.end_line_no = line_no
         self.sv_classes.append(self.current_class)
         self.current_class = None
