@@ -63,18 +63,6 @@ class IncludeGuardTestCase(test.TestCase):
             iut = self.get_listener(lb, self.cut)
             iut.error.assert_called_with(mock.ANY, mock.ANY, mock.ANY, "Include guard ifndef '__BASE_TEST_SV__' and define '__BASE_TEST_SV_' do not match.")
 
-    def test_endif_mismatch(self):
-        content = StringIO("""// Default header
-        `ifndef __BASE_TEST_SV__
-         `define __BASE_TEST_SV__
-        
-        `endif // guard
-        """)
-        with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
-            iut = self.get_listener(lb, self.cut)
-            iut.error.assert_called_with(mock.ANY, mock.ANY, mock.ANY, "Include guard ifndef '__BASE_TEST_SV__' and define '__BASE_TEST_SV_' do not match.")
-
     def test_missing_ifndef(self):
         content = StringIO("""// Default header
          `define __BASE_TEST_SV__
