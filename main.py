@@ -1,9 +1,7 @@
 import argparse
+import importlib.util
 import logging
 import sys
-
-import duvm.all
-import duvm.filters
 
 class ReportServer(object):
 
@@ -61,6 +59,13 @@ class GlobalConfig(object):
         parser.add_argument('files',
                             nargs='+',
                             help='Files to check')
+        parser.add_argument('--rc',
+                            dest='rule_config',
+                            action='append',
+                            default=[],
+                            required=True,
+                            help=("Path to python file containing rules."
+                                  "May be specified multiple times."))
         parser.add_argument('-m',
                             dest='display_motivation',
                             action='store_true',
@@ -72,9 +77,20 @@ class GlobalConfig(object):
 def main(argv):
     gc = GlobalConfig(argv)
 
+    top_broadcasters = []
+    for rc in gc.options.rule_config:
+        spec = importlib.util.spec_from_file_location(rc, rc)
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        try:
+            top_broadcasters.append(mod.top_broadcaster)
+        except AttributeError:
+            raise AttributeError("file {} did not contain a variable 'top_broadcaster'".format(rc))
+
     for fname in gc.options.files:
-        with open(fname) as fstream:
-            lbc = duvm.filters.LineBroadcaster(fname, fstream, parent=None, gc=gc)
+        for top_broadcaster in top_broadcasters:
+            with open(fname) as fstream:
+                lbc = top_broadcaster(fname, fstream, parent=None, gc=gc)
 
     return gc.rs.error_count > 0
     

@@ -15,4 +15,5 @@ py_binary(
 # Would prefer not to export this, but py_test obnoxiously requries a main variable even when providing a py_binary
 exports_files([
     "main.py",
+    "duvm/lw_rc.py",
 ])
