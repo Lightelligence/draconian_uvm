@@ -16,7 +16,7 @@ class DollarDisplay(filters.LineListener):
                     filters.TestLineBroadcaster,
                     filters.UVCLineBroadcaster]
 
-    display_re = re.compile("\$display")
+    display_re = re.compile("^\s*\$display")
 
     def _update(self, line_no, line):
         if self.display_re.search(line):
