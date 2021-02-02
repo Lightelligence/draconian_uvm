@@ -11,12 +11,11 @@ lbc = filters.LineBroadcaster
 
 class UvmMsgTestCase(test.TestCase):
     cut = UvmMsg
-#        `uvm_info("msg_header", $sformatf("val: %0d", val), UVM_LOW)
     
     def test_uvm_info_low(self):
         """uvm_info not recommended."""
         content = StringIO("""
-        `uvm_info("eic_intr_sb:", $sformatf("Receive pre_write ictl_intr_sum_w1c_reg[%0s]", rw.convert2string()), UVM_LOW);
+        `uvm_info("msg_header", $sformatf("val: %0d", val), UVM_LOW)
         """)
         with mock.patch.object(self.cut, "error", autospec=True):
             lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
