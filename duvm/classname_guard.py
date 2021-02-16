@@ -121,7 +121,6 @@ class ClassnameGuard(filters.LineListener):
         for c in self.sv_classes:
             filesuffix = file_base_name.split('_')[-1]
             expected_suffix = filesuffix + "_c"
-
             if self.exempt_include_seq_re.search(c.name):
                 return
             if c.name.startswith(fileprefix):
