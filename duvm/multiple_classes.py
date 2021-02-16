@@ -60,7 +60,6 @@ class MultipleClasses(filters.LineListener):
         self.current_class = None
 
     def eof(self):
-        print("eof called")
         if self.eof_called:
             return
         self.eof_called = True
