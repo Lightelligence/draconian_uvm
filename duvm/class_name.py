@@ -63,7 +63,7 @@ class ClassName(filters.LineListener):
             if self.exempt_include_seq_re.search(c.name):
                 return
             if c.name.startswith(fileprefix):
-                self.error(c.begin_line_no, c.begin_line, "class name {} does not match expectation. It's redundant to use pkg name {} as prefix.".format(c.name, fileprefix))
+                self.error(c.begin_line_no, c.begin_line, "class '{}' does not match naming convention: expected '{}'. Including the package name in the class name is redundant because we use explicit package scoping.".format(c.name, expected_suffix))
             elif not c.name.endswith(expected_suffix):
-                self.error(c.begin_line_no, c.begin_line, "class name {} does not match expectation. Recommend use suffix: {}".format(c.name, expected_suffix))
+                self.error(c.begin_line_no, c.begin_line, "class '{}' does not match naming convention: expected '{}'. Recommend use suffix '_c' for class naming.".format(c.name, expected_suffix))
 
