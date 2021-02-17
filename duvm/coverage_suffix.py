@@ -14,13 +14,12 @@ class CoverageSuffix(filters.LineListener):
                     filters.TestLineBroadcaster,
                     filters.UVCLineBroadcaster]
 
-    covgroup_re = re.compile(r"^\s*covergroup")
+    covgroup_re = re.compile(r"^\s*covergroup(.*)\;")
 
     def _update(self, line_no, line):
         match = self.covgroup_re.search(line)
         if match:
-            split_line = line.split( )
-            covname_str  = split_line[1].split(';')
+            covname_str = match.group(1).split( )
             if covname_str[0]:
                 if not covname_str[0].endswith("_cg"):
                     if not covname_str[0] == 'cg':

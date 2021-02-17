@@ -15,8 +15,8 @@ class CnstrSuffixTestCase(test.TestCase):
     def test_constraint_endswith_cnstr(self):
         """constraint name ends with _cnstr."""
         content = StringIO("""
-        constraint num_items_cnstr{
-        constraint num_items_cnstr {
+        constraint a_num_items_cnstr{
+        constraint b_num_items_cnstr {
         """)
         with mock.patch.object(self.cut, "error", autospec=True):
             lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))

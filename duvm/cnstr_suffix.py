@@ -1,4 +1,4 @@
-"""Constraint instance always with suffix _cnstr
+"""Constraint instances shall end with suffix '_cnstr'
 
 """
 # Python Imports
@@ -14,17 +14,14 @@ class CnstrSuffix(filters.LineListener):
                     filters.TestLineBroadcaster,
                     filters.UVCLineBroadcaster]
 
-    covgroup_re = re.compile(r"^\s*constraint")
+    covgroup_re = re.compile(r"^\s*constraint(.*)\{")
 
     def _update(self, line_no, line):
         match = self.covgroup_re.search(line)
         if match:
-            split_line = line.split( )
-            constraint_str  = split_line[1].split('{')
-            if constraint_str[0]:
-                if not constraint_str[0].endswith("_cnstr"):
-                    self.error(line_no, line, "Constraint name not ending with _cnstr instead ({}).".format(constraint_str[0]))
-                    
+            constraint_str = match.group(1).strip()
+            if not constraint_str.endswith("_cnstr"):
+                    self.error(line_no, line, "Constraint name not ending with _cnstr instead ({}).".format(constraint_str))
 
     update_testbenchtopline = _update
     update_testline = _update
