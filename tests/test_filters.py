@@ -8,6 +8,11 @@ import test
 
 class FilterTestCase(test.TestCase):
 
+    def tearDown(self):
+        # Reset memoized_directories after each test otherwise test ordering matters
+        filters.UVCLineBroadcaster.memoized_directories = {}
+        super(FilterTestCase, self).tearDown()
+
     @staticmethod
     def _get_listener(broadcaster, listener_type):
         for listener in broadcaster.listener_instances:
@@ -41,12 +46,21 @@ class FilterTestCase(test.TestCase):
         
     def test_uvc(self):
         # This mocks the "<dir>_pkg.sv" file in to existance
-        with mock.patch("os.path.exists", lambda x : True):
+        with mock.patch("glob.glob", lambda x : ["dma_pkg.sv"]):
             lb = filters.LineBroadcaster("/nfs/<user>/<checkout>/dv/agents/dma/dma_drv.sv", StringIO(), parent=None, gc=None, restrictions=self.restrictions())
             self.assertIgnoreLen(lb, 1, 1, 0)
         # The second time it is called in the same process, the directory should be memoized.
         lb = filters.LineBroadcaster("/nfs/<user>/<checkout>/dv/agents/dma/dma_mon.sv", StringIO(), parent=None, gc=None, restrictions=self.restrictions())
         self.assertIgnoreLen(lb, 1, 1, 0)
+
+    def test_not_uvc(self):
+        with mock.patch("glob.glob", lambda x : []):
+            lb = filters.LineBroadcaster("/nfs/<user>/<checkout>/dv/agents/dma/dma_drv.sv", StringIO(), parent=None, gc=None, restrictions=self.restrictions())
+            self.assertIgnoreLen(lb, 1, 1, 1)
+        # The second time it is called in the same process, the directory should be memoized.
+        lb = filters.LineBroadcaster("/nfs/<user>/<checkout>/dv/agents/dma/dma_mon.sv", StringIO(), parent=None, gc=None, restrictions=self.restrictions())
+        self.assertIgnoreLen(lb, 1, 1, 1)
+
 
 class ClassTestCase(test.TestCase):
 
