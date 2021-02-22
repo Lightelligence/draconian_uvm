@@ -20,6 +20,7 @@ class SuperFunction(filters.LineListener):
                     filters.UVCLineBroadcaster]
 
     super_re = re.compile(r"^\s*super\.([^ ]+)\(.*")
+    scopedname_re = re.compile(r"\:\:\s*([^ \#]+)")
 
     class svfunction(object):
         def __init__(self, name, begin_line_no, begin_line):
@@ -34,7 +35,12 @@ class SuperFunction(filters.LineListener):
         self.eof_called = False
 
     def update_beginfunction(self, line_no, line, match):
-         self.current_func = self.svfunction(match.group('name'), line_no, line)
+        func_name = match.group('name')
+        scopename_match = self.scopedname_re.search(func_name)
+        if scopename_match:
+            func_name = scopename_match.group(1)
+
+        self.current_func = self.svfunction(func_name, line_no, line)
 
     def update_endfunction(self, line_no, line, match):
         if self.current_func is None:
