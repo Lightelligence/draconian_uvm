@@ -33,9 +33,10 @@ class ClassnameSchemaTestCase(test.TestCase):
     def test_uvm_derived_class_with_scope(self):
         """match rules for derived_class extends uvm_base_class """
         content = StringIO("""
-        class mem_op_item_c extends probe_pkg::item_c#(mem_op_t);
-        class lz_q_c #(type T=uvm_object) extends cmn_pkg::lz_q_c #(T);
         class item_c extends hostmem_mirror_pkg::item_c;
+        class mem_op_item_c extends probe_pkg::item_c#(mem_op_t);
+        class lz_q_c #(type T=uvm_object) extends cmn_pkg::lz_q_c#(T);
+        class tr_q_c #(type T=uvm_object) extends cmn_pkg::tr_q_c #(T);
         """)
         with mock.patch.object(self.cut, "error", autospec=True):
             lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))

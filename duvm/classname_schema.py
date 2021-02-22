@@ -16,7 +16,6 @@ class ClassnameSchema(filters.LineListener):
 
     subscribe_to = [filters.BeginClassBroadcaster]
 
-    classname_re = re.compile(r"^\s*class\s+([^ ]+)\s+.*extends\s+([^ ]+).*;")
     scopedname_re = re.compile(r"pkg\:\:\s*([^ \#]+)")
     baseclassname_re = re.compile(r".*base_(.*)")
 
@@ -36,23 +35,21 @@ class ClassnameSchema(filters.LineListener):
     }
 
     def update_beginclass(self, line_no, line, match):
-        match = self.classname_re.search(line)
-        if match:
-            derived_classname = match.group(1)
-            base_classname = match.group(2)
-            if base_classname in self.thisdict:
-                if self.thisdict[base_classname] == 'ignore':
-                    return
-                if not derived_classname.endswith(self.thisdict[base_classname]):
-                   self.error(line_no, line, "Derived class '{}' not ending with '{}'. Recommend using suffix '{}' as derived class for base class '{}'".format(derived_classname, self.thisdict[base_classname], self.thisdict[base_classname], base_classname))
-            else :
-                baseclassname_match = self.baseclassname_re.search(base_classname)
-                if baseclassname_match:
-                    base_classname = baseclassname_match.group(1)
+        derived_classname = match.group('name')
+        base_classname = match.group('base')
+        if base_classname in self.thisdict:
+            if self.thisdict[base_classname] == 'ignore':
+                return
+            if not derived_classname.endswith(self.thisdict[base_classname]):
+                self.error(line_no, line, "Derived class '{}' not ending with '{}'. Recommend using suffix '{}' as derived class for base class '{}'".format(derived_classname, self.thisdict[base_classname], self.thisdict[base_classname], base_classname))
+        else :
+            baseclassname_match = self.baseclassname_re.search(base_classname)
+            if baseclassname_match:
+                base_classname = baseclassname_match.group(1)
+            
+            scopename_match = self.scopedname_re.search(base_classname)
+            if scopename_match:
+                base_classname = scopename_match.group(1)
 
-                scopename_match = self.scopedname_re.search(base_classname)
-                if scopename_match:
-                    base_classname = scopename_match.group(1)
-
-                if not derived_classname.endswith(base_classname):
-                    self.error(line_no, line, "Derived class '{}' not ending with '{}'. Recommend using suffix '{}' as derived class for base class '{}'".format(derived_classname, base_classname, base_classname, base_classname))
+            if not derived_classname.endswith(base_classname):
+                self.error(line_no, line, "Derived class '{}' not ending with '{}'. Recommend using suffix '{}' as derived class for base class '{}'".format(derived_classname, base_classname, base_classname, base_classname))
