@@ -16,7 +16,7 @@ class ClassnameSchema(filters.LineListener):
 
     subscribe_to = [filters.BeginClassBroadcaster]
 
-    scopedname_re = re.compile(r"pkg\:\:\s*([^ \#]+)")
+    scopedname_re = re.compile(r"pkg::\s*([^ \#]+)")
     baseclassname_re = re.compile(r".*base_(.*)")
 
     thisdict = {
@@ -29,8 +29,8 @@ class ClassnameSchema(filters.LineListener):
         "uvm_driver": "drv_c",
         "uvm_sequence": "seq_c",
         "uvm_sequence_base": "seq_c",
-        "uvm_component": "ignore",
-        "uvm_object": "ignore",
+        "uvm_component": None,
+        "uvm_object": None,
         "uvm_reg_cbs": "cb_c"
     }
 
@@ -38,7 +38,7 @@ class ClassnameSchema(filters.LineListener):
         derived_classname = match.group('name')
         base_classname = match.group('base')
         if base_classname in self.thisdict:
-            if self.thisdict[base_classname] == 'ignore':
+            if self.thisdict[base_classname] == None:
                 return
             if not derived_classname.endswith(self.thisdict[base_classname]):
                 self.error(line_no, line, "Derived class '{}' not ending with '{}'. Recommend using suffix '{}' as derived class for base class '{}'".format(derived_classname, self.thisdict[base_classname], self.thisdict[base_classname], base_classname))
