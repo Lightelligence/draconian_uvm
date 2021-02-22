@@ -1,4 +1,4 @@
-"""Calling uvm utility by mistake.
+"""Check for accidental use of the wrong UVM utility macro.
 
 """
 # Python Imports

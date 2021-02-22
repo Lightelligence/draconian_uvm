@@ -65,93 +65,93 @@ class FilterTestCase(test.TestCase):
 class ClassTestCase(test.TestCase):
 
 
-    # def test_simple(self):
-    #     content = StringIO("""
-    #     class base_test_c;
-    #     """)
-    #     cut = filters.BeginClassBroadcaster
-    #     lbc = filters.LineBroadcaster
-    #     with mock.patch.object(cut, "broadcast", autospec=True):
-    #         lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(cut))
-    #         iut = self.get_listener(lb, cut)
-    #         iut.broadcast.assert_called_once()
-    #         match = iut.broadcast.call_args[0][3]
-    #         self.assertEqual(match.group('virtual'), None)
-    #         self.assertEqual(match.group('name'), 'base_test_c')
-    #         self.assertEqual(match.group('base'), None)
+    def test_simple(self):
+        content = StringIO("""
+        class base_test_c;
+        """)
+        cut = filters.BeginClassBroadcaster
+        lbc = filters.LineBroadcaster
+        with mock.patch.object(cut, "broadcast", autospec=True):
+            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(cut))
+            iut = self.get_listener(lb, cut)
+            iut.broadcast.assert_called_once()
+            match = iut.broadcast.call_args[0][3]
+            self.assertEqual(match.group('virtual'), None)
+            self.assertEqual(match.group('name'), 'base_test_c')
+            self.assertEqual(match.group('base'), None)
 
-    # def test_simple_inheritance(self):
-    #     content = StringIO("""
-    #     class base_test_c extends uvm_test; 
-    #     """)
-    #     cut = filters.BeginClassBroadcaster
-    #     lbc = filters.LineBroadcaster
-    #     with mock.patch.object(cut, "broadcast", autospec=True):
-    #         lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(cut))
-    #         iut = self.get_listener(lb, cut)
-    #         iut.broadcast.assert_called_once()
-    #         match = iut.broadcast.call_args[0][3]
-    #         self.assertEqual(match.group('virtual'), None)
-    #         self.assertEqual(match.group('name'), 'base_test_c')
-    #         self.assertEqual(match.group('base'), 'uvm_test')
+    def test_simple_inheritance(self):
+        content = StringIO("""
+        class base_test_c extends uvm_test; 
+        """)
+        cut = filters.BeginClassBroadcaster
+        lbc = filters.LineBroadcaster
+        with mock.patch.object(cut, "broadcast", autospec=True):
+            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(cut))
+            iut = self.get_listener(lb, cut)
+            iut.broadcast.assert_called_once()
+            match = iut.broadcast.call_args[0][3]
+            self.assertEqual(match.group('virtual'), None)
+            self.assertEqual(match.group('name'), 'base_test_c')
+            self.assertEqual(match.group('base'), 'uvm_test')
 
-    # def test_virtual(self):
-    #     content = StringIO("""
-    #     virtual class base_test_c extends uvm_test; 
-    #     """)
-    #     cut = filters.BeginClassBroadcaster
-    #     lbc = filters.LineBroadcaster
-    #     with mock.patch.object(cut, "broadcast", autospec=True):
-    #         lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(cut))
-    #         iut = self.get_listener(lb, cut)
-    #         iut.broadcast.assert_called_once()
-    #         match = iut.broadcast.call_args[0][3]
-    #         self.assertEqual(match.group('virtual'), 'virtual')
-    #         self.assertEqual(match.group('name'), 'base_test_c')
-    #         self.assertEqual(match.group('base'), 'uvm_test')
+    def test_virtual(self):
+        content = StringIO("""
+        virtual class base_test_c extends uvm_test; 
+        """)
+        cut = filters.BeginClassBroadcaster
+        lbc = filters.LineBroadcaster
+        with mock.patch.object(cut, "broadcast", autospec=True):
+            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(cut))
+            iut = self.get_listener(lb, cut)
+            iut.broadcast.assert_called_once()
+            match = iut.broadcast.call_args[0][3]
+            self.assertEqual(match.group('virtual'), 'virtual')
+            self.assertEqual(match.group('name'), 'base_test_c')
+            self.assertEqual(match.group('base'), 'uvm_test')
 
-    # def test_params(self):
-    #     content = StringIO("""
-    #     virtual class base_test_c #(type T=int, type S=int) extends uvm_test; 
-    #     """)
-    #     cut = filters.BeginClassBroadcaster
-    #     lbc = filters.LineBroadcaster
-    #     with mock.patch.object(cut, "broadcast", autospec=True):
-    #         lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(cut))
-    #         iut = self.get_listener(lb, cut)
-    #         iut.broadcast.assert_called_once()
-    #         match = iut.broadcast.call_args[0][3]
-    #         self.assertEqual(match.group('virtual'), 'virtual')
-    #         self.assertEqual(match.group('name'), 'base_test_c')
-    #         self.assertEqual(match.group('params'), '#(type T=int, type S=int)')
-    #         self.assertEqual(match.group('base'), 'uvm_test')
+    def test_params(self):
+        content = StringIO("""
+        virtual class base_test_c #(type T=int, type S=int) extends uvm_test; 
+        """)
+        cut = filters.BeginClassBroadcaster
+        lbc = filters.LineBroadcaster
+        with mock.patch.object(cut, "broadcast", autospec=True):
+            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(cut))
+            iut = self.get_listener(lb, cut)
+            iut.broadcast.assert_called_once()
+            match = iut.broadcast.call_args[0][3]
+            self.assertEqual(match.group('virtual'), 'virtual')
+            self.assertEqual(match.group('name'), 'base_test_c')
+            self.assertEqual(match.group('params'), '#(type T=int, type S=int)')
+            self.assertEqual(match.group('base'), 'uvm_test')
 
-    # def test_both_side_params(self):
-    #     content = StringIO("""
-    #     virtual class seq_c #(type T=int, type S=int) extends uvm_sequence #(item_c); 
-    #     """)
-    #     cut = filters.BeginClassBroadcaster
-    #     lbc = filters.LineBroadcaster
-    #     with mock.patch.object(cut, "broadcast", autospec=True):
-    #         lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(cut))
-    #         iut = self.get_listener(lb, cut)
-    #         iut.broadcast.assert_called_once()
-    #         match = iut.broadcast.call_args[0][3]
-    #         self.assertEqual(match.group('virtual'), 'virtual')
-    #         self.assertEqual(match.group('name'), 'seq_c')
-    #         self.assertEqual(match.group('params'), '#(type T=int, type S=int)')
-    #         self.assertEqual(match.group('base'), 'uvm_sequence')
+    def test_both_side_params(self):
+        content = StringIO("""
+        virtual class seq_c #(type T=int, type S=int) extends uvm_sequence #(item_c); 
+        """)
+        cut = filters.BeginClassBroadcaster
+        lbc = filters.LineBroadcaster
+        with mock.patch.object(cut, "broadcast", autospec=True):
+            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(cut))
+            iut = self.get_listener(lb, cut)
+            iut.broadcast.assert_called_once()
+            match = iut.broadcast.call_args[0][3]
+            self.assertEqual(match.group('virtual'), 'virtual')
+            self.assertEqual(match.group('name'), 'seq_c')
+            self.assertEqual(match.group('params'), '#(type T=int, type S=int)')
+            self.assertEqual(match.group('base'), 'uvm_sequence')
         
-    # def test_endclass(self):
-    #     content = StringIO("""
-    #     endclass : base_test_c
-    #     """)
-    #     cut = filters.EndClassBroadcaster
-    #     lbc = filters.LineBroadcaster
-    #     with mock.patch.object(cut, "broadcast", autospec=True):
-    #         lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(cut))
-    #         iut = self.get_listener(lb, cut)
-    #         iut.broadcast.assert_called_once()
+    def test_endclass(self):
+        content = StringIO("""
+        endclass : base_test_c
+        """)
+        cut = filters.EndClassBroadcaster
+        lbc = filters.LineBroadcaster
+        with mock.patch.object(cut, "broadcast", autospec=True):
+            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(cut))
+            iut = self.get_listener(lb, cut)
+            iut.broadcast.assert_called_once()
 
     def test_extern_function(self):
         content = StringIO("""
@@ -178,7 +178,6 @@ class ClassTestCase(test.TestCase):
             self.assertEqual(match.group('virtual'), None)
             self.assertEqual(match.group('name'), 'pre_run_test')
             self.assertEqual(match.group('return'), None)
-
 
     def test_virtual_function(self):
         content = StringIO("""
@@ -208,7 +207,7 @@ class ClassTestCase(test.TestCase):
             self.assertEqual(match.group('virtual'), None)
             self.assertEqual(match.group('name'), 'v_mem_c::peek_mem')
 
-    def test_scope_function(self):
+    def test_param_function(self):
         content = StringIO("""
         virtual function void write_sqr_export(item_c #(ADDR_WIDTH,DATA_WIDTH) _item);
         """)
@@ -223,6 +222,84 @@ class ClassTestCase(test.TestCase):
             self.assertEqual(match.group('name'), 'write_sqr_export')
 
     def test_endfunction(self):
+        content = StringIO("""
+        endfunction : poke
+        """)
+        cut = filters.EndFunctionBroadcaster
+        lbc = filters.LineBroadcaster
+        with mock.patch.object(cut, "broadcast", autospec=True):
+            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(cut))
+            iut = self.get_listener(lb, cut)
+            iut.broadcast.assert_called_once()
+
+    def test_extern_task(self):
+        content = StringIO("""
+        extern task store();
+        """)
+        cut = filters.BeginTaskBroadcaster
+        lbc = filters.LineBroadcaster
+        with mock.patch.object(cut, "broadcast", autospec=True):
+            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(cut))
+            iut = self.get_listener(lb, cut)
+            iut.broadcast.assert_not_called()
+
+    def test_simple_task(self):
+        content = StringIO("""
+        task pre_body();
+        """)
+        cut = filters.BeginTaskBroadcaster
+        lbc = filters.LineBroadcaster
+        with mock.patch.object(cut, "broadcast", autospec=True):
+            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(cut))
+            iut = self.get_listener(lb, cut)
+            iut.broadcast.assert_called_once()
+            match = iut.broadcast.call_args[0][3]
+            self.assertEqual(match.group('virtual'), None)
+            self.assertEqual(match.group('name'), 'pre_body')
+
+    def test_virtual_task(self):
+        content = StringIO("""
+        virtual task put_up_response(UP_TRAFFIC _up_traffic);
+        """)
+        cut = filters.BeginTaskBroadcaster
+        lbc = filters.LineBroadcaster
+        with mock.patch.object(cut, "broadcast", autospec=True):
+            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(cut))
+            iut = self.get_listener(lb, cut)
+            iut.broadcast.assert_called_once()
+            match = iut.broadcast.call_args[0][3]
+            self.assertEqual(match.group('virtual'), 'virtual')
+            self.assertEqual(match.group('name'), 'put_up_response')
+
+    def test_scope_task(self):
+        content = StringIO("""
+        task v_mem_c::peek_mem(addr_type addr1, addr_type addr2);
+        """)
+        cut = filters.BeginTaskBroadcaster
+        lbc = filters.LineBroadcaster
+        with mock.patch.object(cut, "broadcast", autospec=True):
+            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(cut))
+            iut = self.get_listener(lb, cut)
+            iut.broadcast.assert_called_once()
+            match = iut.broadcast.call_args[0][3]
+            self.assertEqual(match.group('virtual'), None)
+            self.assertEqual(match.group('name'), 'v_mem_c::peek_mem')
+
+    def test_param_task(self):
+        content = StringIO("""
+        virtual task write_sqr_export(item_c #(ADDR_WIDTH,DATA_WIDTH) _item);
+        """)
+        cut = filters.BeginTaskBroadcaster
+        lbc = filters.LineBroadcaster
+        with mock.patch.object(cut, "broadcast", autospec=True):
+            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(cut))
+            iut = self.get_listener(lb, cut)
+            iut.broadcast.assert_called_once()
+            match = iut.broadcast.call_args[0][3]
+            self.assertEqual(match.group('virtual'), 'virtual')
+            self.assertEqual(match.group('name'), 'write_sqr_export')
+
+    def test_endtask(self):
         content = StringIO("""
         endfunction : poke
         """)

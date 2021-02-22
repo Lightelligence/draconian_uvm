@@ -30,6 +30,8 @@ class PkgName(filters.LineListener):
         super(PkgName, self).__init__(filename, fstream, *args, **kwargs)
         self.filename = filename
         self._in_pkg_file = False
+        os.environ["PYTHON_COVERAGE"] = "coverage"
+        # print("fixme-hw:", os.environ)
         basename  = os.path.basename(filename)
         pkg_match = self.pkg_re.search(basename)
         if pkg_match:

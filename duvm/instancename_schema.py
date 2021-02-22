@@ -1,5 +1,5 @@
-"""Derived class naming schema
-
+"""Instance naming schema
+   Instance name should hint the instance type.
 """
 # Python Imports
 import os
@@ -7,7 +7,6 @@ import re
 # Lintwork Imports
 # Draconian UVM imports
 from duvm import filters
-
 
 class InstancenameSchema(filters.LineListener):
     """Check for the naming of uvm_component/uvm_object instance
