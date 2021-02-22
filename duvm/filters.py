@@ -83,8 +83,8 @@ class UVCLineBroadcaster(lw.Broadcaster, lw.Listener):
 
 class BeginClassBroadcaster(lw.Broadcaster, lw.Listener):
     subscribe_to = [LineBroadcaster]
-
-    begin_class_re = re.compile("^\s*(?P<virtual>virtual){0,1}\s*class\s+(?P<name>[^\s#]+)\s*(?P<params>#\(.*?\)){0,1}(\s+extends\s+(?P<base>[^\s#]+))\s*(?P<baseparams>#\(.*?\)){0,1}\s*;")
+    
+    begin_class_re = re.compile("^\s*(?P<virtual>virtual){0,1}\s*class\s+(?P<name>[^\s#]+)\s*(?P<params>#\(.*?\)){0,1}(\s+extends\s+(?P<base>[^\s#]+)){0,1}\s*(?P<baseparams>#\(.*?\)){0,1}\s*;")
 
     def update_line(self, line_no, line):
         match = self.begin_class_re.search(line)

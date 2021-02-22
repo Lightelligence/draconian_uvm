@@ -125,6 +125,22 @@ class ClassTestCase(test.TestCase):
             self.assertEqual(match.group('name'), 'base_test_c')
             self.assertEqual(match.group('params'), '#(type T=int, type S=int)')
             self.assertEqual(match.group('base'), 'uvm_test')
+
+    def test_both_side_params(self):
+        content = StringIO("""
+        virtual class seq_c #(type T=int, type S=int) extends uvm_sequence #(item_c); 
+        """)
+        cut = filters.BeginClassBroadcaster
+        lbc = filters.LineBroadcaster
+        with mock.patch.object(cut, "broadcast", autospec=True):
+            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(cut))
+            iut = self.get_listener(lb, cut)
+            iut.broadcast.assert_called_once()
+            match = iut.broadcast.call_args[0][3]
+            self.assertEqual(match.group('virtual'), 'virtual')
+            self.assertEqual(match.group('name'), 'seq_c')
+            self.assertEqual(match.group('params'), '#(type T=int, type S=int)')
+            self.assertEqual(match.group('base'), 'uvm_sequence')
         
     def test_endclass(self):
         content = StringIO("""
