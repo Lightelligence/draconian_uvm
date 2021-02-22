@@ -19,7 +19,7 @@ class ClassnameSchema(filters.LineListener):
     scopedname_re = re.compile(r"pkg::\s*([^ \#]+)")
     baseclassname_re = re.compile(r".*base_(.*)")
 
-    thisdict = {
+    schema_dict = {
         "uvm_env": "env_c",
         "uvm_agent" : "agent_c",
         "uvm_monitor" : "mon_c",
@@ -37,11 +37,11 @@ class ClassnameSchema(filters.LineListener):
     def update_beginclass(self, line_no, line, match):
         derived_classname = match.group('name')
         base_classname = match.group('base')
-        if base_classname in self.thisdict:
-            if self.thisdict[base_classname] == None:
+        if base_classname in self.schema_dict:
+            if self.schema_dict[base_classname] == None:
                 return
-            if not derived_classname.endswith(self.thisdict[base_classname]):
-                self.error(line_no, line, "Derived class '{}' not ending with '{}'. Recommend using suffix '{}' as derived class for base class '{}'".format(derived_classname, self.thisdict[base_classname], self.thisdict[base_classname], base_classname))
+            if not derived_classname.endswith(self.schema_dict[base_classname]):
+                self.error(line_no, line, "Derived class '{}' not ending with '{}'. Recommend using suffix '{}' as derived class for base class '{}'".format(derived_classname, self.schema_dict[base_classname], self.schema_dict[base_classname], base_classname))
         else :
             baseclassname_match = self.baseclassname_re.search(base_classname)
             if baseclassname_match:
