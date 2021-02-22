@@ -95,6 +95,8 @@ class BeginClassBroadcaster(lw.Broadcaster, lw.Listener):
         self._broadcast("eof")
 
 
+
+
 class EndClassBroadcaster(lw.Broadcaster, lw.Listener):
     subscribe_to = [LineBroadcaster]
     
@@ -102,6 +104,32 @@ class EndClassBroadcaster(lw.Broadcaster, lw.Listener):
 
     def update_line(self, line_no, line):
         match = self.end_class_re.search(line)
+        if match:
+            self.broadcast(line_no, line, match)
+    
+    def eof(self):
+        self._broadcast("eof")
+
+class BeginFunctionBroadcaster(lw.Broadcaster, lw.Listener):
+    subscribe_to = [LineBroadcaster]
+    
+    begin_func_re = re.compile("^\s*(?!extern)(?P<virtual>virtual){0,1}\s*function\s+(?P<return>.*\s){0,1}\s*(?P<name>[^\s#]+)\s*\(.*\);")
+
+    def update_line(self, line_no, line):
+        match = self.begin_func_re.search(line)
+        if match:
+            self.broadcast(line_no, line, match)
+
+    def eof(self):
+        self._broadcast("eof")
+
+class EndFunctionBroadcaster(lw.Broadcaster, lw.Listener):
+    subscribe_to = [LineBroadcaster]
+    
+    end_func_re = re.compile("^\s*endfunction")
+
+    def update_line(self, line_no, line):
+        match = self.end_func_re.search(line)
         if match:
             self.broadcast(line_no, line, match)
     
