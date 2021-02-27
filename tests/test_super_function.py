@@ -33,6 +33,23 @@ class SuperFuncTaskTestCase(test.TestCase):
             iut = self.get_listener(lb, self.cut)
             iut.error.assert_not_called()
 
+    def test_super_match_current_automatic_function(self):
+        """using uvm_component_utils in the right scope """
+        content = StringIO("""
+        task automatic wait_clocks(input int unsigned num_clocks);
+          int unsigned clocks_waited = 0;
+          while (clocks_waited < num_clocks) begin
+            @(posedge clk);
+            clocks_waited += 1;
+          end
+        endtask
+        """)
+        content = StringIO(content.getvalue())
+        with mock.patch.object(self.cut, "error", autospec=True):
+            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            iut = self.get_listener(lb, self.cut)
+            iut.error.assert_not_called()
+
     def test_super_not_match_current_function(self):
         """using uvm_component_utils in the right scope """
         content = StringIO("""

@@ -96,6 +96,16 @@ class ClassnameSchemaTestCase(test.TestCase):
     def test_derived_class_from_base_class(self):
         """match rules for derived_class extends uvm_base_class """
         content = StringIO("""
+        class derived_seq_c extends env_pkg::top_seq_c;
+        """)
+        with mock.patch.object(self.cut, "error", autospec=True):
+            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            iut = self.get_listener(lb, self.cut)
+            iut.error.assert_not_called()
+      
+    def test_derived_class_from_top_class(self):
+        """match rules for derived_class extends uvm_base_class """
+        content = StringIO("""
         class derived_seq_c extends env_pkg::a_base_seq_c;
         class item_c extends env_pkg::base_item_c;
         """)

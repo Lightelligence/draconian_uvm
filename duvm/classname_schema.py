@@ -17,7 +17,7 @@ class ClassnameSchema(filters.LineListener):
     subscribe_to = [filters.BeginClassBroadcaster]
 
     scopedname_re = re.compile(r"pkg::\s*([^ \#]+)")
-    baseclassname_re = re.compile(r".*base_(.*)")
+    baseclassname_re = re.compile(r".*(base|top)_(.*)")
 
     schema_dict = {
         "uvm_env": "env_c",
@@ -31,6 +31,8 @@ class ClassnameSchema(filters.LineListener):
         "uvm_sequence_base": "seq_c",
         "uvm_component": None,
         "uvm_object": None,
+        "uvm_reg_adapter": "reg_adapter_c",
+        "uvm_reg_block": "reg_block_c",
         "uvm_reg_cbs": "cb_c"
     }
 
@@ -45,7 +47,7 @@ class ClassnameSchema(filters.LineListener):
         else :
             baseclassname_match = self.baseclassname_re.search(base_classname)
             if baseclassname_match:
-                base_classname = baseclassname_match.group(1)
+                base_classname = baseclassname_match.group(2)
             
             scopename_match = self.scopedname_re.search(base_classname)
             if scopename_match:
