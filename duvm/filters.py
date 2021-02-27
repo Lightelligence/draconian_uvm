@@ -109,7 +109,7 @@ class EndClassBroadcaster(lw.Broadcaster, lw.Listener):
 class BeginTaskBroadcaster(lw.Broadcaster, lw.Listener):
     subscribe_to = [LineBroadcaster]
     
-    begin_task_re = re.compile("^\s*(?!extern)(?P<virtual>virtual){0,1}\s*task\s+(?P<name>[^\s#]+)\s*\(.*\);")
+    begin_task_re = re.compile("^\s*(?!extern)(?P<virtual>virtual){0,1}\s*task\s+(?P<option>.*\s){0,1}\s*(?P<name>[^\s#]+)\s*\(.*\){0,1}\s*;")
 
     def update_line(self, line_no, line):
         match = self.begin_task_re.search(line)
@@ -135,7 +135,8 @@ class EndTaskBroadcaster(lw.Broadcaster, lw.Listener):
 class BeginFunctionBroadcaster(lw.Broadcaster, lw.Listener):
     subscribe_to = [LineBroadcaster]
     
-    begin_func_re = re.compile("^\s*(?!extern)(?P<virtual>virtual){0,1}\s*function\s+(?P<return>.*\s){0,1}\s*(?P<name>[^\s#]+)\s*\(.*\);")
+    # begin_func_re = re.compile("^\s*(?!extern)(?P<virtual>virtual){0,1}\s*function\s+(?P<return>.*\s){0,1}\s*(?P<name>[^\s#]+)\s*\(.*\);")
+    begin_func_re = re.compile("^\s*(?!extern)((?P<virtual>virtual)|(?P<static>static)){0,1}\s*function\s+(?P<return>.*\s){0,1}\s*(?P<name>[^\s#]+)\s*\(.*\){0,1}\s*;")
 
     def update_line(self, line_no, line):
         match = self.begin_func_re.search(line)

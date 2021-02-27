@@ -221,6 +221,21 @@ class ClassTestCase(test.TestCase):
             self.assertEqual(match.group('virtual'), 'virtual')
             self.assertEqual(match.group('name'), 'write_sqr_export')
 
+    def test_static_function(self):
+        content = StringIO("""
+        static function void print_itemized_instr(instr_t _instr_q[$]) ;
+        """)
+        cut = filters.BeginFunctionBroadcaster
+        lbc = filters.LineBroadcaster
+        with mock.patch.object(cut, "broadcast", autospec=True):
+            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(cut))
+            iut = self.get_listener(lb, cut)
+            iut.broadcast.assert_called_once()
+            match = iut.broadcast.call_args[0][3]
+            self.assertEqual(match.group('virtual'), None)
+            self.assertEqual(match.group('static'), 'static')
+            self.assertEqual(match.group('name'), 'print_itemized_instr')
+
     def test_endfunction(self):
         content = StringIO("""
         endfunction : poke
@@ -242,6 +257,20 @@ class ClassTestCase(test.TestCase):
             lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(cut))
             iut = self.get_listener(lb, cut)
             iut.broadcast.assert_not_called()
+
+    def test_automatic_task(self):
+        content = StringIO("""
+        task automatic wait_clocks(input int unsigned num_clocks);
+        """)
+        cut = filters.BeginTaskBroadcaster
+        lbc = filters.LineBroadcaster
+        with mock.patch.object(cut, "broadcast", autospec=True):
+            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(cut))
+            iut = self.get_listener(lb, cut)
+            iut.broadcast.assert_called_once()
+            match = iut.broadcast.call_args[0][3]
+            self.assertEqual(match.group('virtual'), None)
+            self.assertEqual(match.group('name'), 'wait_clocks')
 
     def test_simple_task(self):
         content = StringIO("""
@@ -301,9 +330,9 @@ class ClassTestCase(test.TestCase):
 
     def test_endtask(self):
         content = StringIO("""
-        endfunction : poke
+        endtask : poke
         """)
-        cut = filters.EndFunctionBroadcaster
+        cut = filters.EndTaskBroadcaster
         lbc = filters.LineBroadcaster
         with mock.patch.object(cut, "broadcast", autospec=True):
             lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(cut))
