@@ -4,6 +4,7 @@
 
 import os
 import re
+import glob
 
 from lw import linebase as lb
 from lw import base as lw
@@ -63,13 +64,12 @@ class UVCLineBroadcaster(lw.Broadcaster, lw.Listener):
         try:
             inside_uvc = self.memoized_directories[dirname]
         except KeyError:
-            expected_pkg_name = os.path.basename(dirname)
-            if expected_pkg_name.endswith("_pkg"):
-                # Allow directories to have "_pkg" suffix
-                expected_pkg_name = expected_pkg_name[:-4]
-            expected_pkg_filename = "{}_pkg.sv".format(expected_pkg_name)
-            expected_pkg_path = os.path.join(dirname, expected_pkg_filename)
-            inside_uvc = os.path.exists(expected_pkg_path)
+            inside_uvc = False
+
+            dir_files = glob.glob(os.path.join(dirname, "*pkg.sv"))  + glob.glob(os.path.join(dirname, "../","*pkg.sv"))
+            if len(dir_files):
+                inside_uvc = True
+
             self.memoized_directories[dirname] = inside_uvc
         if not inside_uvc:
             self._ignore(LineBroadcaster)
@@ -80,11 +80,10 @@ class UVCLineBroadcaster(lw.Broadcaster, lw.Listener):
     def eof(self):
         self._broadcast("eof")
 
-
 class BeginClassBroadcaster(lw.Broadcaster, lw.Listener):
     subscribe_to = [LineBroadcaster]
-
-    begin_class_re = re.compile("^\s*(?P<virtual>virtual){0,1}\s*class\s+(?P<name>[^\s#]+)\s*(?P<params>#\(.*\)){0,1}(\s+extends\s+(?P<base>[^;]+)){0,1}\s*;")
+    
+    begin_class_re = re.compile("^\s*(?P<virtual>virtual){0,1}\s*class\s+(?P<name>[^\s#]+)\s*(?P<params>#\(.*?\)){0,1}(\s+extends\s+(?P<base>[^\s#]+)){0,1}\s*(?P<baseparams>#\(.*?\)){0,1}\s*;")
 
     def update_line(self, line_no, line):
         match = self.begin_class_re.search(line)
@@ -94,7 +93,6 @@ class BeginClassBroadcaster(lw.Broadcaster, lw.Listener):
     def eof(self):
         self._broadcast("eof")
 
-
 class EndClassBroadcaster(lw.Broadcaster, lw.Listener):
     subscribe_to = [LineBroadcaster]
     
@@ -102,6 +100,59 @@ class EndClassBroadcaster(lw.Broadcaster, lw.Listener):
 
     def update_line(self, line_no, line):
         match = self.end_class_re.search(line)
+        if match:
+            self.broadcast(line_no, line, match)
+    
+    def eof(self):
+        self._broadcast("eof")
+
+class BeginTaskBroadcaster(lw.Broadcaster, lw.Listener):
+    subscribe_to = [LineBroadcaster]
+    
+    begin_task_re = re.compile("^\s*(?!extern)(?P<virtual>virtual){0,1}\s*task\s+(?P<option>.*\s){0,1}\s*(?P<name>[^\s#]+)\s*\(.*\){0,1}\s*;")
+
+    def update_line(self, line_no, line):
+        match = self.begin_task_re.search(line)
+        if match:
+            self.broadcast(line_no, line, match)
+
+    def eof(self):
+        self._broadcast("eof")
+
+class EndTaskBroadcaster(lw.Broadcaster, lw.Listener):
+    subscribe_to = [LineBroadcaster]
+    
+    end_task_re = re.compile("^\s*endtask")
+
+    def update_line(self, line_no, line):
+        match = self.end_task_re.search(line)
+        if match:
+            self.broadcast(line_no, line, match)
+    
+    def eof(self):
+        self._broadcast("eof")
+
+class BeginFunctionBroadcaster(lw.Broadcaster, lw.Listener):
+    subscribe_to = [LineBroadcaster]
+    
+    # begin_func_re = re.compile("^\s*(?!extern)(?P<virtual>virtual){0,1}\s*function\s+(?P<return>.*\s){0,1}\s*(?P<name>[^\s#]+)\s*\(.*\);")
+    begin_func_re = re.compile("^\s*(?!extern)((?P<virtual>virtual)|(?P<static>static)){0,1}\s*function\s+(?P<return>.*\s){0,1}\s*(?P<name>[^\s#]+)\s*\(.*\){0,1}\s*;")
+
+    def update_line(self, line_no, line):
+        match = self.begin_func_re.search(line)
+        if match:
+            self.broadcast(line_no, line, match)
+
+    def eof(self):
+        self._broadcast("eof")
+
+class EndFunctionBroadcaster(lw.Broadcaster, lw.Listener):
+    subscribe_to = [LineBroadcaster]
+    
+    end_func_re = re.compile("^\s*endfunction")
+
+    def update_line(self, line_no, line):
+        match = self.end_func_re.search(line)
         if match:
             self.broadcast(line_no, line, match)
     
