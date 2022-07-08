@@ -71,7 +71,7 @@ class AssertRandomizeTestCase(test.TestCase):
         with mock.patch.object(self.cut, "error", autospec=True):
             lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
-            iut.error.assert_called_with(mock.ANY, mock.ANY, mock.ANY, "Randomize call was not wrapped with a `cmn_assert.")
+            iut.error.assert_called_with(mock.ANY, mock.ANY, mock.ANY, "Randomize call was not wrapped with a `cmn_assert|`cmn_fassert.")
 
     def test_comment_ok(self):
         """Commented out case"""
