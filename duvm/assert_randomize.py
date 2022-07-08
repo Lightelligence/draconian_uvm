@@ -17,12 +17,12 @@ class AssertRandomize(filters.LineListener):
                     filters.UVCLineBroadcaster]
 
     randomize_re = re.compile("(((\.)|(std::))randomize)\(")
-    assert_re = re.compile("^\s*(//)*\s*`cmn_assert\(")
-    fassert_re = re.compile("^\s*(//)*\s*`cmn_fassert\(")
+    assert_re = re.compile("^\s*(//)*\s*`cmn_f?assert\(")
+    # fassert_re = re.compile("^\s*(//)*\s*`cmn_fassert\(")
 
     def _update(self, line_no, line):
         if self.randomize_re.search(line):
-            if not (self.assert_re.search(line) or self.fassert_re.search(line)):
+            if not self.assert_re.search(line):
                 self.error(line_no, line, "Randomize call was not wrapped with a `cmn_assert|`cmn_fassert.")
 
     update_testbenchtopline = _update
