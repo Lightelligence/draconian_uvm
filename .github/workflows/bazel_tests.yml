@@ -18,5 +18,8 @@ jobs:
       - name: run-buildifier-diff
         run: bazel run //tests:buildifier_format_diff
 
-      - name: run-py-tests
-        run: bazel test //tests/...
+      - name: run-buildifier-lint
+        run: bazel run //tests:buildifier_lint
+
+      # - name: run-py-tests
+      #   run: bazel test //tests/...
