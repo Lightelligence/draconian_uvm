@@ -13,7 +13,7 @@ buildifier(
         "-function-docstring-args",
         "-function-docstring",
     ],
-    mode = "fix",
+    mode = "check",
 )
 
 buildifier(
