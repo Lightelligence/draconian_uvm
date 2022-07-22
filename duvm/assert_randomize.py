@@ -22,7 +22,7 @@ class AssertRandomize(filters.LineListener):
     def _update(self, line_no, line):
         if self.randomize_re.search(line):
             if not self.assert_re.search(line):
-                self.error(line_no, line, "Randomize call was not wrapped with a `cmn_assert|`cmn_fassert.")
+                self.error(line_no, line, "Randomize call was not wrapped with a `cmn_assert or `cmn_fassert.")
 
     update_testbenchtopline = _update
     update_testline = _update
