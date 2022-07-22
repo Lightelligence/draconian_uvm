@@ -5,7 +5,7 @@ def glob_to_individual_py_tests(files):
             srcs = [name],
             deps = [
                 ":test",
-                ":lib"
+                ":lib",
             ],
             main = name,
         )
