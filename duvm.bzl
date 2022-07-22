@@ -1,3 +1,5 @@
+"""Top-level macro for running draconian_uvm tests."""
+
 def duvm_test(name, srcs, tags = []):
     """Run draconian_uvm on source files."""
     data = srcs + ["@draconian_uvm//:duvm/lw_rc.py", "@draconian_uvm//:lib"]
