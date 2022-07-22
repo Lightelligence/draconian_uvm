@@ -14,16 +14,17 @@ class UvmUtility(filters.LineListener):
      should use `uvm_component_utils and `uvm_object_utils in the right scopes.
     """
 
-    subscribe_to = [filters.BeginClassBroadcaster, 
-                    filters.EndClassBroadcaster,
-                    filters.TestLineBroadcaster,
-                    filters.UVCLineBroadcaster]
+    subscribe_to = [
+        filters.BeginClassBroadcaster, filters.EndClassBroadcaster, filters.TestLineBroadcaster,
+        filters.UVCLineBroadcaster
+    ]
 
     baseclassname_re = re.compile(r".*base(_.*)")
 
     uvm_utils_re = re.compile(r"^\s*\`((uvm_component_utils)|(uvm_object_utils)).*")
 
     class svclass(object):
+
         def __init__(self, name, base_class, begin_line_no, begin_line):
             self.name = name
             self.base_class = base_class
@@ -31,24 +32,24 @@ class UvmUtility(filters.LineListener):
             self.begin_line = begin_line
             self.use_uvm_utils = False
             self.uvm_util = None
-    
+
     compdict = {
         "uvm_component": "ignore",
         "uvm_test": "_test",
         "uvm_env": "env_c",
-        "uvm_agent" : "agent_c",
-        "uvm_monitor" : "mon_c",
-        "uvm_scoreboard" : "sb_c",
-        "uvm_sequencer" : "sqr_c",
+        "uvm_agent": "agent_c",
+        "uvm_monitor": "mon_c",
+        "uvm_scoreboard": "sb_c",
+        "uvm_sequencer": "sqr_c",
         "uvm_driver": "drv_c"
     }
 
     objdict = {
-        "uvm_sequence_item" : "item_c",
+        "uvm_sequence_item": "item_c",
         "uvm_sequence": "seq_c",
         "uvm_sequence_base": "seq_c",
         "uvm_object": "ignore",
-        "uvm_reg_block" : "reg_block_c"
+        "uvm_reg_block": "reg_block_c"
     }
 
     def __init__(self, filename, fstream, *args, **kwargs):
@@ -72,21 +73,27 @@ class UvmUtility(filters.LineListener):
         if self.eof_called:
             return
         self.eof_called = True
-        
+
         for c in self.sv_classes:
             if c.use_uvm_utils:
                 suffixname = '_'.join(c.base_class.split('_')[-2:])
                 baseclassname_match = self.baseclassname_re.search(suffixname)
                 if baseclassname_match:
                     suffixname = baseclassname_match.group(1)
-                
+
                 if c.base_class in self.compdict or suffixname in self.compdict.values():
                     if not c.uvm_util == 'uvm_component_utils':
-                        self.error(c.begin_line_no, c.begin_line, "Class {} is uvm_component but using {}, should replace it with uvm_component_utils".format(c.name, c.uvm_util))
+                        self.error(
+                            c.begin_line_no, c.begin_line,
+                            "Class {} is uvm_component but using {}, should replace it with uvm_component_utils".format(
+                                c.name, c.uvm_util))
 
                 if c.base_class in self.objdict or suffixname in self.objdict.values():
                     if not c.uvm_util == 'uvm_object_utils':
-                        self.error(c.begin_line_no, c.begin_line, "Class {} is uvm_object but using {}, should replace it with uvm_object_utils".format(c.name, c.uvm_util))
+                        self.error(
+                            c.begin_line_no, c.begin_line,
+                            "Class {} is uvm_object but using {}, should replace it with uvm_object_utils".format(
+                                c.name, c.uvm_util))
 
     def _update(self, line_no, line):
         if not self.current_class == None:
@@ -94,6 +101,6 @@ class UvmUtility(filters.LineListener):
             if utilmatch:
                 self.current_class.use_uvm_utils = True
                 self.current_class.uvm_util = utilmatch.group(1)
-            
+
     update_uvcline = _update
     update_testline = _update

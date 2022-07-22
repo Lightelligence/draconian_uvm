@@ -7,6 +7,7 @@ import re
 # Draconian UVM imports
 from duvm import filters
 
+
 class Pragma(filters.LineListener):
     """
     """

@@ -21,11 +21,11 @@ class ClassnameSchema(filters.LineListener):
 
     schema_dict = {
         "uvm_env": "env_c",
-        "uvm_agent" : "agent_c",
-        "uvm_monitor" : "mon_c",
-        "uvm_scoreboard" : "sb_c",
-        "uvm_sequence_item" : "item_c",
-        "uvm_sequencer" : "sqr_c",
+        "uvm_agent": "agent_c",
+        "uvm_monitor": "mon_c",
+        "uvm_scoreboard": "sb_c",
+        "uvm_sequence_item": "item_c",
+        "uvm_sequencer": "sqr_c",
         "uvm_driver": "drv_c",
         "uvm_sequence": "seq_c",
         "uvm_sequence_base": "seq_c",
@@ -43,15 +43,22 @@ class ClassnameSchema(filters.LineListener):
             if self.schema_dict[base_classname] == None:
                 return
             if not derived_classname.endswith(self.schema_dict[base_classname]):
-                self.error(line_no, line, "Derived class '{}' not ending with '{}'. Recommend using suffix '{}' as derived class for base class '{}'".format(derived_classname, self.schema_dict[base_classname], self.schema_dict[base_classname], base_classname))
-        else :
+                self.error(
+                    line_no, line,
+                    "Derived class '{}' not ending with '{}'. Recommend using suffix '{}' as derived class for base class '{}'"
+                    .format(derived_classname, self.schema_dict[base_classname], self.schema_dict[base_classname],
+                            base_classname))
+        else:
             baseclassname_match = self.baseclassname_re.search(base_classname)
             if baseclassname_match:
                 base_classname = baseclassname_match.group(2)
-            
+
             scopename_match = self.scopedname_re.search(base_classname)
             if scopename_match:
                 base_classname = scopename_match.group(1)
 
             if not derived_classname.endswith(base_classname):
-                self.error(line_no, line, "Derived class '{}' not ending with '{}'. Recommend using suffix '{}' as derived class for base class '{}'".format(derived_classname, base_classname, base_classname, base_classname))
+                self.error(
+                    line_no, line,
+                    "Derived class '{}' not ending with '{}'. Recommend using suffix '{}' as derived class for base class '{}'"
+                    .format(derived_classname, base_classname, base_classname, base_classname))

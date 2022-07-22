@@ -9,9 +9,10 @@ import test
 
 lbc = filters.LineBroadcaster
 
+
 class SuperFuncTaskTestCase(test.TestCase):
     cut = SuperFuncTask
-    
+
     def test_super_match_current_function(self):
         """using uvm_component_utils in the right scope """
         content = StringIO("""
@@ -29,7 +30,11 @@ class SuperFuncTaskTestCase(test.TestCase):
         """)
         content = StringIO(content.getvalue())
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
             iut.error.assert_not_called()
 
@@ -46,7 +51,11 @@ class SuperFuncTaskTestCase(test.TestCase):
         """)
         content = StringIO(content.getvalue())
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
             iut.error.assert_not_called()
 
@@ -61,9 +70,14 @@ class SuperFuncTaskTestCase(test.TestCase):
         """)
         content = StringIO(content.getvalue())
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
-            iut.error.assert_called_with(mock.ANY, mock.ANY, mock.ANY, "Super called with new, but not matching current function name: build_phase")
+            iut.error.assert_called_with(mock.ANY, mock.ANY, mock.ANY,
+                                         "Super called with new, but not matching current function name: build_phase")
 
     def test_scop_match(self):
         """using uvm_component_utils in the right scope """
@@ -82,7 +96,11 @@ class SuperFuncTaskTestCase(test.TestCase):
         """)
         content = StringIO(content.getvalue())
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
             iut.error.assert_not_called()
 
@@ -97,9 +115,14 @@ class SuperFuncTaskTestCase(test.TestCase):
         """)
         content = StringIO(content.getvalue())
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
-            iut.error.assert_called_with(mock.ANY, mock.ANY, mock.ANY, "Super called with new, but not matching current function name: peek_mem")
+            iut.error.assert_called_with(mock.ANY, mock.ANY, mock.ANY,
+                                         "Super called with new, but not matching current function name: peek_mem")
 
     def test_super_match_current_task(self):
         """using uvm_component_utils in the right scope """
@@ -118,7 +141,11 @@ class SuperFuncTaskTestCase(test.TestCase):
         """)
         content = StringIO(content.getvalue())
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
             iut.error.assert_not_called()
 
@@ -133,9 +160,15 @@ class SuperFuncTaskTestCase(test.TestCase):
         """)
         content = StringIO(content.getvalue())
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
-            iut.error.assert_called_with(mock.ANY, mock.ANY, mock.ANY, "Super called with pre_run_phase, but not matching current task name: run_phase")
+            iut.error.assert_called_with(
+                mock.ANY, mock.ANY, mock.ANY,
+                "Super called with pre_run_phase, but not matching current task name: run_phase")
 
     def test_scop_task(self):
         """using uvm_component_utils in the right scope """
@@ -148,9 +181,14 @@ class SuperFuncTaskTestCase(test.TestCase):
         """)
         content = StringIO(content.getvalue())
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
-            iut.error.assert_called_with(mock.ANY, mock.ANY, mock.ANY, "Super called with new, but not matching current task name: peek_mem")
+            iut.error.assert_called_with(mock.ANY, mock.ANY, mock.ANY,
+                                         "Super called with new, but not matching current task name: peek_mem")
 
     def test_super_scope_missmatch(self):
         """using uvm_component_utils in the right scope """
@@ -168,9 +206,16 @@ class SuperFuncTaskTestCase(test.TestCase):
         """)
         content = StringIO(content.getvalue())
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
-            iut.error.assert_called_with(mock.ANY, mock.ANY, mock.ANY, "Super called with monitor_mem, but not matching current function name: peek_mem")
+            iut.error.assert_called_with(
+                mock.ANY, mock.ANY, mock.ANY,
+                "Super called with monitor_mem, but not matching current function name: peek_mem")
+
 
 if __name__ == '__main__':
     unittest.main()

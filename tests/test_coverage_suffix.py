@@ -9,9 +9,10 @@ import test
 
 lbc = filters.LineBroadcaster
 
+
 class CoverageSuffixTestCase(test.TestCase):
     cut = CoverageSuffix
-    
+
     def test_cov_endswith_cg(self):
         """covergroup ends with _cg."""
         content = StringIO("""
@@ -19,7 +20,11 @@ class CoverageSuffixTestCase(test.TestCase):
         covergroup edl_comb_harvest_cg with function sample(edl_combination_req_cov_struct_t edl_combination_req_cov_st);
         """)
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
             iut.error.assert_not_called()
 
@@ -29,9 +34,14 @@ class CoverageSuffixTestCase(test.TestCase):
         covergroup core_id;
         """)
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
-            iut.error.assert_called_with(mock.ANY, mock.ANY, mock.ANY, "Coverage group name not ending with _cg instead (core_id).")
+            iut.error.assert_called_with(mock.ANY, mock.ANY, mock.ANY,
+                                         "Coverage group name not ending with _cg instead (core_id).")
 
     def test_cg_w_sampling_not_endswith_cg(self):
         """covergroup ends with _cg."""
@@ -39,9 +49,14 @@ class CoverageSuffixTestCase(test.TestCase):
         covergroup edl_comb_harvest_cov with function sample(edl_combination_req_cov_struct_t edl_combination_req_cov_st);
         """)
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
-            iut.error.assert_called_with(mock.ANY, mock.ANY, mock.ANY, "Coverage group name not ending with _cg instead (edl_comb_harvest_cov).")
+            iut.error.assert_called_with(mock.ANY, mock.ANY, mock.ANY,
+                                         "Coverage group name not ending with _cg instead (edl_comb_harvest_cov).")
 
     def test_cov_endswith_only_cg(self):
         """covergroup ends with _cg."""
@@ -49,9 +64,14 @@ class CoverageSuffixTestCase(test.TestCase):
         covergroup cg;
         """)
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
             iut.error.assert_not_called()
+
 
 if __name__ == '__main__':
     unittest.main()
