@@ -1,4 +1,4 @@
-load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+workspace(name = "draconian_uvm")
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
@@ -39,16 +39,12 @@ http_archive(
     url = "https://github.com/bazelbuild/buildtools/archive/refs/tags/5.1.0.tar.gz",
 )
 
-git_repository(
-    name = "lintworks",
-    branch = "main",
-    remote = "git@github.com:Lightelligence/lintworks.git",
+http_archive(
+    name = "rules_python",
+    sha256 = "a3a6e99f497be089f81ec082882e40246bfd435f52f4e82f37e89449b04573f6",
+    strip_prefix = "rules_python-0.10.2",
+    url = "https://github.com/bazelbuild/rules_python/archive/refs/tags/0.10.2.tar.gz",
 )
-# local_repository(
-#     name = "lintworks",
-#     path = "../lintworks", # Or wherever you want to point
-# )
-
 
 load("@rules_python//python:pip.bzl", "pip_install")
 
@@ -56,4 +52,11 @@ load("@rules_python//python:pip.bzl", "pip_install")
 pip_install(
     name = "pip_deps",
     requirements = "//:requirements.txt",
+)
+
+http_archive(
+    name = "lintworks",
+    sha256 = "c1ceb55d02c8bab386288dec0816d306133552d321b111a26472f79695d8239f",
+    strip_prefix = "lintworks-0.0.2",
+    urls = ["https://github.com/Lightelligence/lintworks/archive/refs/tags/v0.0.2.tar.gz"],
 )

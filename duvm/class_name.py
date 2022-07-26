@@ -22,6 +22,7 @@ class ClassName(filters.LineListener):
     exempt_include_seq_re = re.compile(r"seq")
 
     class svclass(object):
+
         def __init__(self, name, file_name, begin_line_no, begin_line):
             self.name = name
             self.file_name = file_name
@@ -49,7 +50,7 @@ class ClassName(filters.LineListener):
 
         dirname = os.path.dirname(self.filename)
         file_base_name = os.path.splitext(os.path.basename(self.filename))[0]
-        pkgdirname_match = self.pkgdir_re.search(dirname) 
+        pkgdirname_match = self.pkgdir_re.search(dirname)
         envdirname_match = self.envdir_re.search(dirname)
         if pkgdirname_match:
             fileprefix = pkgdirname_match.group(2)
@@ -63,7 +64,12 @@ class ClassName(filters.LineListener):
             if self.exempt_include_seq_re.search(c.name):
                 return
             if c.name.startswith(fileprefix):
-                self.error(c.begin_line_no, c.begin_line, "class '{}' does not match naming convention: expected '{}'. Including the package name in the class name is redundant because we use explicit package scoping.".format(c.name, expected_suffix))
+                self.error(
+                    c.begin_line_no, c.begin_line,
+                    "class '{}' does not match naming convention: expected '{}'. Including the package name in the class name is redundant because we use explicit package scoping."
+                    .format(c.name, expected_suffix))
             elif not c.name.endswith(expected_suffix):
-                self.error(c.begin_line_no, c.begin_line, "class '{}' does not match naming convention: expected '{}'. Recommend use suffix '_c' for class naming.".format(c.name, expected_suffix))
-
+                self.error(
+                    c.begin_line_no, c.begin_line,
+                    "class '{}' does not match naming convention: expected '{}'. Recommend use suffix '_c' for class naming."
+                    .format(c.name, expected_suffix))

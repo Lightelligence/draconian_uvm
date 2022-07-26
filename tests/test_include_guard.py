@@ -9,6 +9,7 @@ import test
 
 lbc = filters.LineBroadcaster
 
+
 class IncludeGuardTestCase(test.TestCase):
     cut = IncludeGuard
 
@@ -19,7 +20,11 @@ class IncludeGuardTestCase(test.TestCase):
         `endif // guard
         """)
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
             iut.error.assert_not_called()
 
@@ -34,7 +39,11 @@ class IncludeGuardTestCase(test.TestCase):
         `endif // guard
         """)
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
             iut.error.assert_not_called()
 
@@ -51,10 +60,13 @@ class IncludeGuardTestCase(test.TestCase):
         `endif // guard
         """)
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
             iut.error.assert_not_called()
-
 
     def test_code_before_guard(self):
         content = StringIO("""// Default Header
@@ -65,10 +77,16 @@ class IncludeGuardTestCase(test.TestCase):
         `endif // guard
         """)
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
-            iut.error.assert_called_with(mock.ANY, mock.ANY, mock.ANY, "Expected an include guard `ifndef directive in the first non-comment, non-blank line of the file.")
-        
+            iut.error.assert_called_with(
+                mock.ANY, mock.ANY, mock.ANY,
+                "Expected an include guard `ifndef directive in the first non-comment, non-blank line of the file.")
+
     def test_define_mismatch(self):
         content = StringIO("""// Default header
         `ifndef __BASE_TEST_SV__
@@ -77,9 +95,15 @@ class IncludeGuardTestCase(test.TestCase):
         `endif // guard
         """)
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
-            iut.error.assert_called_with(mock.ANY, mock.ANY, mock.ANY, "Include guard ifndef '__BASE_TEST_SV__' and define '__BASE_TEST_SV_' do not match.")
+            iut.error.assert_called_with(
+                mock.ANY, mock.ANY, mock.ANY,
+                "Include guard ifndef '__BASE_TEST_SV__' and define '__BASE_TEST_SV_' do not match.")
 
     def test_missing_ifndef(self):
         content = StringIO("""// Default header
@@ -87,10 +111,16 @@ class IncludeGuardTestCase(test.TestCase):
         `endif // guard
         """)
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
-            iut.error.assert_called_with(mock.ANY, mock.ANY, mock.ANY, "Expected an include guard `ifndef directive in the first non-comment, non-blank line of the file.")
-            
+            iut.error.assert_called_with(
+                mock.ANY, mock.ANY, mock.ANY,
+                "Expected an include guard `ifndef directive in the first non-comment, non-blank line of the file.")
+
     def test_missing_define(self):
         content = StringIO("""// Default header
         `ifndef __BASE_TEST_SV__
@@ -98,9 +128,14 @@ class IncludeGuardTestCase(test.TestCase):
         `endif // guard
         """)
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
-            iut.error.assert_called_with(mock.ANY, mock.ANY, mock.ANY, "Never saw matching define for include guard ifndef '__BASE_TEST_SV__'")
+            iut.error.assert_called_with(mock.ANY, mock.ANY, mock.ANY,
+                                         "Never saw matching define for include guard ifndef '__BASE_TEST_SV__'")
 
     def test_missing_endif(self):
         content = StringIO("""// Default header
@@ -108,9 +143,14 @@ class IncludeGuardTestCase(test.TestCase):
          `define __BASE_TEST_SV__
         """)
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
-            iut.error.assert_called_with(mock.ANY, mock.ANY, mock.ANY, "Never saw an endif for include guard '__BASE_TEST_SV__'")
+            iut.error.assert_called_with(mock.ANY, mock.ANY, mock.ANY,
+                                         "Never saw an endif for include guard '__BASE_TEST_SV__'")
 
     def test_endif_matches_guard(self):
         content = StringIO("""// Default header
@@ -119,7 +159,11 @@ class IncludeGuardTestCase(test.TestCase):
          `endif // __BASE_TEST_SV__
         """)
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
             iut.error.assert_not_called()
 
@@ -130,9 +174,15 @@ class IncludeGuardTestCase(test.TestCase):
          `endif // __COPY_PASTE_LEFTOVERS__
         """)
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
-            iut.error.assert_called_with(mock.ANY, mock.ANY, mock.ANY, "The endif comment for include guard '__BASE_TEST_SV__' should be '__BASE_TEST_SV__' or 'guard'")
+            iut.error.assert_called_with(
+                mock.ANY, mock.ANY, mock.ANY,
+                "The endif comment for include guard '__BASE_TEST_SV__' should be '__BASE_TEST_SV__' or 'guard'")
 
     def test_other_define_endif(self):
         content = StringIO("""// Default header
@@ -145,7 +195,11 @@ class IncludeGuardTestCase(test.TestCase):
          `endif // guard
         """)
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
             iut.error.assert_not_called()
 
@@ -156,9 +210,15 @@ class IncludeGuardTestCase(test.TestCase):
          `endif // guard
         """)
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
-            iut.error.assert_called_with(mock.ANY, mock.ANY, mock.ANY, "The include guard doesn't match expected format.")
+            iut.error.assert_called_with(mock.ANY, mock.ANY, mock.ANY,
+                                         "The include guard doesn't match expected format.")
+
 
 if __name__ == '__main__':
     unittest.main()

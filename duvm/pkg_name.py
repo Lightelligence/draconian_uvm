@@ -17,9 +17,11 @@ class PkgName(filters.LineListener):
      #2: Directory name should match with the files name as prefix.
     """
 
-    subscribe_to = [filters.TestbenchTopLineBroadcaster,
-                    filters.UVCLineBroadcaster,
-                    filters.TestLineBroadcaster,]
+    subscribe_to = [
+        filters.TestbenchTopLineBroadcaster,
+        filters.UVCLineBroadcaster,
+        filters.TestLineBroadcaster,
+    ]
 
     pkg_re = re.compile(r"(.*)_pkg.sv*")
     pkgdir_re = re.compile(r"(.*)\/(.*)_pkg")
@@ -30,14 +32,14 @@ class PkgName(filters.LineListener):
         super(PkgName, self).__init__(filename, fstream, *args, **kwargs)
         self.filename = filename
         self._in_pkg_file = False
-        basename  = os.path.basename(filename)
+        basename = os.path.basename(filename)
         pkg_match = self.pkg_re.search(basename)
         if pkg_match:
             self._in_pkg_file = True
             self._pkg_name = pkg_match.group(1)
             file_base_name = os.path.splitext(os.path.basename(self.filename))[0]
             dirname = os.path.dirname(self.filename)
-            pkgdirname_match = self.pkgdir_re.search(dirname) 
+            pkgdirname_match = self.pkgdir_re.search(dirname)
             envdirname_match = self.envdir_re.search(dirname)
             exp_pkg_name = None
             if pkgdirname_match:
@@ -48,8 +50,11 @@ class PkgName(filters.LineListener):
                 exp_pkg_name = fileprefix + "_pkg"
             else:
                 return
-            if not exp_pkg_name == file_base_name :
-                self.error(None, None, "pkg file name not match with directory name. pkg_name({}) - suggested name ({}).".format(file_base_name, exp_pkg_name))
+            if not exp_pkg_name == file_base_name:
+                self.error(
+                    None, None,
+                    "pkg file name not match with directory name. pkg_name({}) - suggested name ({}).".format(
+                        file_base_name, exp_pkg_name))
 
     def _update(self, line_no, line):
         if self._in_pkg_file:
@@ -60,7 +65,10 @@ class PkgName(filters.LineListener):
                 if representation.startswith("uvm_"):
                     return
                 if not representation.startswith(self._pkg_name):
-                    self.error(line_no, line, "include file but not with corresponding pkg name. pkg_name({}) - included file name ({}).".format(self._pkg_name, representation))
+                    self.error(
+                        line_no, line,
+                        "include file but not with corresponding pkg name. pkg_name({}) - included file name ({}).".
+                        format(self._pkg_name, representation))
 
     update_testbenchtopline = _update
     update_testline = _update
