@@ -9,16 +9,21 @@ import test
 
 lbc = filters.LineBroadcaster
 
+
 class ClassNameTestCase(test.TestCase):
     cut = ClassName
-    
+
     def test_component_name_match_expectation(self):
         """include file name should match with directory name - env."""
         content = StringIO("""
         class sb_c extends uvm_component;
         """)
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/sys_env/sys_env_sb.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/sys_env/sys_env_sb.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
             iut.error.assert_not_called()
 
@@ -31,9 +36,16 @@ class ClassNameTestCase(test.TestCase):
         content = StringIO(content.getvalue())
 
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/sys_env/sys_env_sb.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/sys_env/sys_env_sb.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
-            iut.error.assert_called_with(mock.ANY, mock.ANY, mock.ANY, "class 'sys_env_sb_c' does not match naming convention: expected 'sb_c'. Including the package name in the class name is redundant because we use explicit package scoping.")
+            iut.error.assert_called_with(
+                mock.ANY, mock.ANY, mock.ANY,
+                "class 'sys_env_sb_c' does not match naming convention: expected 'sb_c'. Including the package name in the class name is redundant because we use explicit package scoping."
+            )
 
     def test_component_suffix_not_match_expectation(self):
         content = StringIO()
@@ -44,9 +56,17 @@ class ClassNameTestCase(test.TestCase):
         content = StringIO(content.getvalue())
 
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/sys_env/sys_env_sb.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/sys_env/sys_env_sb.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
-            iut.error.assert_called_with(mock.ANY, mock.ANY, mock.ANY, "class 'sb' does not match naming convention: expected 'sb_c'. Recommend use suffix '_c' for class naming.")
+            iut.error.assert_called_with(
+                mock.ANY, mock.ANY, mock.ANY,
+                "class 'sb' does not match naming convention: expected 'sb_c'. Recommend use suffix '_c' for class naming."
+            )
+
 
 if __name__ == '__main__':
     unittest.main()

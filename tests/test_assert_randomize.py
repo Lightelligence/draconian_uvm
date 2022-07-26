@@ -9,6 +9,7 @@ import test
 
 lbc = filters.LineBroadcaster
 
+
 class AssertRandomizeTestCase(test.TestCase):
 
     cut = AssertRandomize
@@ -19,7 +20,11 @@ class AssertRandomizeTestCase(test.TestCase):
         some other content
         """)
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
             iut.error.assert_not_called()
 
@@ -29,9 +34,14 @@ class AssertRandomizeTestCase(test.TestCase):
         cfg.randomize();
         """)
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
-            iut.error.assert_called_with(mock.ANY, mock.ANY, mock.ANY, "Randomize call was not wrapped with a `cmn_assert.")
+            iut.error.assert_called_with(mock.ANY, mock.ANY, mock.ANY,
+                                         "Randomize call was not wrapped with a `cmn_assert.")
 
     def test_randomize_with(self):
         """Randomize call without wrapping should fail (adding with block)"""
@@ -39,9 +49,14 @@ class AssertRandomizeTestCase(test.TestCase):
         cfg.randomize() with { period_ps == 1000};
         """)
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
-            iut.error.assert_called_with(mock.ANY, mock.ANY, mock.ANY, "Randomize call was not wrapped with a `cmn_assert.")
+            iut.error.assert_called_with(mock.ANY, mock.ANY, mock.ANY,
+                                         "Randomize call was not wrapped with a `cmn_assert.")
 
     def test_randomize_wrapped(self):
         """Randomize call is wrapped correctly with cmn_assert"""
@@ -49,7 +64,11 @@ class AssertRandomizeTestCase(test.TestCase):
         `cmn_assert(cfg.randomize());
         """)
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
             iut.error.assert_not_called()
 
@@ -59,7 +78,11 @@ class AssertRandomizeTestCase(test.TestCase):
         `cmn_assert(cfg.randomize() with { period_ps == 1000});
         """)
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
             iut.error.assert_not_called()
 
@@ -69,9 +92,14 @@ class AssertRandomizeTestCase(test.TestCase):
         std::randomize(seed);
         """)
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
-            iut.error.assert_called_with(mock.ANY, mock.ANY, mock.ANY, "Randomize call was not wrapped with a `cmn_assert.")
+            iut.error.assert_called_with(mock.ANY, mock.ANY, mock.ANY,
+                                         "Randomize call was not wrapped with a `cmn_assert.")
 
     def test_comment_ok(self):
         """Commented out case"""
@@ -79,9 +107,14 @@ class AssertRandomizeTestCase(test.TestCase):
         // `cmn_assert(std::randomize(seed))
         """)
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
             iut.error.assert_not_called()
+
 
 if __name__ == '__main__':
     unittest.main()

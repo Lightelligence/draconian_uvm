@@ -9,9 +9,10 @@ import test
 
 lbc = filters.LineBroadcaster
 
+
 class ClassnameSchemaTestCase(test.TestCase):
     cut = ClassnameSchema
-    
+
     def test_uvm_derived_class_name_match_expectation(self):
         """match rules for derived_class extends uvm_base_class """
         content = StringIO("""
@@ -26,10 +27,14 @@ class ClassnameSchemaTestCase(test.TestCase):
         class clr_cb_c extends uvm_reg_cbs;
         """)
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
             iut.error.assert_not_called()
-            
+
     def test_uvm_derived_class_with_scope(self):
         """match rules for derived_class extends uvm_base_class """
         content = StringIO("""
@@ -39,7 +44,11 @@ class ClassnameSchemaTestCase(test.TestCase):
         class tr_q_c #(type T=uvm_object) extends cmn_pkg::tr_q_c #(T);
         """)
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
             iut.error.assert_not_called()
 
@@ -49,9 +58,16 @@ class ClassnameSchemaTestCase(test.TestCase):
         class a_env extends uvm_env;
         """)
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
-            iut.error.assert_called_with(mock.ANY, mock.ANY, mock.ANY, "Derived class 'a_env' not ending with 'env_c'. Recommend using suffix 'env_c' as derived class for base class 'uvm_env'")
+            iut.error.assert_called_with(
+                mock.ANY, mock.ANY, mock.ANY,
+                "Derived class 'a_env' not ending with 'env_c'. Recommend using suffix 'env_c' as derived class for base class 'uvm_env'"
+            )
 
     def test_derived_env_name_not_match_baseclass(self):
         """match rules for derived_class extends uvm_base_class """
@@ -59,9 +75,16 @@ class ClassnameSchemaTestCase(test.TestCase):
         class sb_c extends uvm_env;
         """)
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
-            iut.error.assert_called_with(mock.ANY, mock.ANY, mock.ANY, "Derived class 'sb_c' not ending with 'env_c'. Recommend using suffix 'env_c' as derived class for base class 'uvm_env'")
+            iut.error.assert_called_with(
+                mock.ANY, mock.ANY, mock.ANY,
+                "Derived class 'sb_c' not ending with 'env_c'. Recommend using suffix 'env_c' as derived class for base class 'uvm_env'"
+            )
 
     def test_derived_class_a_name_match_expectation(self):
         """match rules for derived_class extends uvm_base_class """
@@ -69,7 +92,11 @@ class ClassnameSchemaTestCase(test.TestCase):
         class err_drv_c extends drv_c;
         """)
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
             iut.error.assert_not_called()
 
@@ -79,7 +106,11 @@ class ClassnameSchemaTestCase(test.TestCase):
         class db_err_drv_c extends err_drv_c;
         """)
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
             iut.error.assert_not_called()
 
@@ -89,9 +120,16 @@ class ClassnameSchemaTestCase(test.TestCase):
         class drv_instance_c extends drv_c;
         """)
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
-            iut.error.assert_called_with(mock.ANY, mock.ANY, mock.ANY, "Derived class 'drv_instance_c' not ending with 'drv_c'. Recommend using suffix 'drv_c' as derived class for base class 'drv_c'")
+            iut.error.assert_called_with(
+                mock.ANY, mock.ANY, mock.ANY,
+                "Derived class 'drv_instance_c' not ending with 'drv_c'. Recommend using suffix 'drv_c' as derived class for base class 'drv_c'"
+            )
 
     def test_derived_class_from_base_class(self):
         """match rules for derived_class extends uvm_base_class """
@@ -99,10 +137,14 @@ class ClassnameSchemaTestCase(test.TestCase):
         class derived_seq_c extends env_pkg::top_seq_c;
         """)
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
             iut.error.assert_not_called()
-      
+
     def test_derived_class_from_top_class(self):
         """match rules for derived_class extends uvm_base_class """
         content = StringIO("""
@@ -110,10 +152,14 @@ class ClassnameSchemaTestCase(test.TestCase):
         class item_c extends env_pkg::base_item_c;
         """)
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
             iut.error.assert_not_called()
-      
+
 
 if __name__ == '__main__':
     unittest.main()

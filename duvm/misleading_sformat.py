@@ -6,6 +6,7 @@ import re
 # Draconian UVM imports
 from duvm import filters
 
+
 class MisleadingSformat(filters.LineListener):
     """Catch misleading print statemetns.
     
@@ -16,12 +17,10 @@ class MisleadingSformat(filters.LineListener):
     This check looks for mismatching identifiers.
 
     """
-    subscribe_to = [filters.TestbenchTopLineBroadcaster,
-                    filters.TestLineBroadcaster,
-                    filters.UVCLineBroadcaster]
+    subscribe_to = [filters.TestbenchTopLineBroadcaster, filters.TestLineBroadcaster, filters.UVCLineBroadcaster]
 
     sformatf_re = re.compile(r"\$sformatf\(.*((0([xXdDbB]))|('([hdb])))%([-0-9]*([xXdDbB]))")
-    
+
     def _update(self, line_no, line):
         match = self.sformatf_re.search(line)
         if match:
@@ -33,8 +32,9 @@ class MisleadingSformat(filters.LineListener):
                 representation = 'x'
             format_specifier = match.group(7).lower()
             if representation != format_specifier:
-                self.error(line_no, line, "Representation ({}) and format specifier ({}) have mismatching bases.".format(match.group(1), match.group(6)))
-            
+                self.error(
+                    line_no, line, "Representation ({}) and format specifier ({}) have mismatching bases.".format(
+                        match.group(1), match.group(6)))
 
     update_testbenchtopline = _update
     update_testline = _update

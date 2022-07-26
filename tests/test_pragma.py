@@ -10,6 +10,7 @@ import test
 
 lbc = filters.LineBroadcaster
 
+
 class PragmaTestCase(test.TestCase):
 
     cut = Pragma
@@ -21,7 +22,11 @@ class PragmaTestCase(test.TestCase):
         some other content
         """)
         with mock.patch.object(DollarDisplay, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(*self.restrictions))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(*self.restrictions))
             iut = self.get_listener(lb, DollarDisplay)
             iut.error.assert_not_called()
 
@@ -31,7 +36,11 @@ class PragmaTestCase(test.TestCase):
         $display("Some unconditional message");
         """)
         with mock.patch.object(DollarDisplay, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(*self.restrictions))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(*self.restrictions))
             iut = self.get_listener(lb, DollarDisplay)
             iut.error.assert_called_with(mock.ANY, mock.ANY, mock.ANY, "Do not use $display. Use `uvm_info instead.")
 
@@ -42,9 +51,13 @@ class PragmaTestCase(test.TestCase):
         $display("Some unconditional message");
         """)
         with mock.patch.object(DollarDisplay, "error", autospec=True):
-           lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(*self.restrictions))
-           iut = self.get_listener(lb, DollarDisplay)
-           iut.error.assert_not_called()
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(*self.restrictions))
+            iut = self.get_listener(lb, DollarDisplay)
+            iut.error.assert_not_called()
 
     def test_pragma_reenabled(self):
         """$display here."""
@@ -55,9 +68,13 @@ class PragmaTestCase(test.TestCase):
         $display("Some unconditional message");
         """)
         with mock.patch.object(DollarDisplay, "error", autospec=True):
-           lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(*self.restrictions))
-           iut = self.get_listener(lb, DollarDisplay)
-           iut.error.assert_called_with(mock.ANY, mock.ANY, mock.ANY, "Do not use $display. Use `uvm_info instead.")
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(*self.restrictions))
+            iut = self.get_listener(lb, DollarDisplay)
+            iut.error.assert_called_with(mock.ANY, mock.ANY, mock.ANY, "Do not use $display. Use `uvm_info instead.")
 
     def test_pragma_unknown_class(self):
         """$display here."""
@@ -65,9 +82,15 @@ class PragmaTestCase(test.TestCase):
         // duvm: disable=ThisClassDoesntExist
         """)
         with mock.patch.object(self.cut, "error", autospec=True):
-           lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(*self.restrictions))
-           iut = self.get_listener(lb, self.cut)
-           iut.error.assert_called_with(mock.ANY, mock.ANY, mock.ANY, "could not find listener (ThisClassDoesntExist) class used in pragma")
-           
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(*self.restrictions))
+            iut = self.get_listener(lb, self.cut)
+            iut.error.assert_called_with(mock.ANY, mock.ANY, mock.ANY,
+                                         "could not find listener (ThisClassDoesntExist) class used in pragma")
+
+
 if __name__ == '__main__':
     unittest.main()

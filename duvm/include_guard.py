@@ -17,13 +17,12 @@ class IncludeGuard(filters.LineListener):
        ...   
       `endif // guard
     """
-    subscribe_to = [filters.TestLineBroadcaster,
-                    filters.UVCLineBroadcaster]
+    subscribe_to = [filters.TestLineBroadcaster, filters.UVCLineBroadcaster]
 
     line_is_comment_or_empty_re = re.compile("^\s*((//.*)|())$")
 
     ifndef_re = re.compile("^\s*`ifndef\s+(\S+)")
-    define_re = re.compile("^\s*`define\s+(\S+)")    
+    define_re = re.compile("^\s*`define\s+(\S+)")
     endif_re = re.compile("^\s*`endif(\s*//\s*(.*))")
 
     exempt_files_re = re.compile("_intf.sv[h]?")
@@ -42,7 +41,6 @@ class IncludeGuard(filters.LineListener):
         self._saw_at_least_one_line = False
         self._in_block_comment = False
 
-
     def is_guard_value_legal(self):
         """Compare to see if the guard value is an expected format.
 
@@ -51,8 +49,7 @@ class IncludeGuard(filters.LineListener):
           __<FILENAME>__
         """
         filename_piece = re.sub("[^A-Z0-9_]", "_", os.path.basename(self.filename).upper())
-        if self._guard_value in ["__{}".format(filename_piece),
-                                 "__{}__".format(filename_piece)]:
+        if self._guard_value in ["__{}".format(filename_piece), "__{}__".format(filename_piece)]:
             return True
         return False
 
@@ -85,20 +82,24 @@ class IncludeGuard(filters.LineListener):
                 self._looking_for_ifndef = False
                 self._looking_for_define = True
             else:
-                self.error(line_no, line, "Expected an include guard `ifndef directive in the first non-comment, non-blank line of the file.")
+                self.error(
+                    line_no, line,
+                    "Expected an include guard `ifndef directive in the first non-comment, non-blank line of the file.")
             return
 
         if self._looking_for_define:
             match = self.define_re.search(line)
             if match:
                 if match.group(1) != self._guard_value:
-                    self.error(line_no, line, "Include guard ifndef '{}' and define '{}' do not match.".format(self._guard_value, match.group(1)))
+                    self.error(
+                        line_no, line, "Include guard ifndef '{}' and define '{}' do not match.".format(
+                            self._guard_value, match.group(1)))
                 self._looking_for_define = False
                 self._looking_for_endif = True
             else:
                 self.error(line_no, line, "Did not find define on line immediately following indef")
             return
-            
+
         if self._looking_for_endif:
             # Could hit other endif that are not part of the guard, so just keep recording until the end of file
             # TODO actually count ifdef/else/endif to find guard endif more precisely
@@ -110,7 +111,9 @@ class IncludeGuard(filters.LineListener):
         if not self._saw_at_least_one_line:
             return
         if self._looking_for_ifndef:
-            self.error(None, None, "Expected an include guard `ifndef directive in the first non-comment, non-blank line of the file.")
+            self.error(
+                None, None,
+                "Expected an include guard `ifndef directive in the first non-comment, non-blank line of the file.")
             return
         if self._looking_for_define:
             self.error(None, None, "Never saw matching define for include guard ifndef '{}'".format(self._guard_value))
@@ -119,16 +122,16 @@ class IncludeGuard(filters.LineListener):
             self.error(None, None, "Never saw an endif for include guard '{}'".format(self._guard_value))
             return
         if self._endif_value not in ["guard", self._guard_value]:
-            self.error(None, None, "The endif comment for include guard '{0}' should be '{0}' or 'guard'".format(self._guard_value))
-
+            self.error(None, None,
+                       "The endif comment for include guard '{0}' should be '{0}' or 'guard'".format(self._guard_value))
 
     def error(self, line_no, line, message):
         self.disable()
         self.update_testline = None
         self.update_uvcline = None
         self.eof = None # The errors in the eof step can be misleading if
-                        # previous errors have occurred.
+        # previous errors have occurred.
         super(IncludeGuard, self).error(line_no, line, message)
-        
+
     update_testline = _update
     update_uvcline = _update

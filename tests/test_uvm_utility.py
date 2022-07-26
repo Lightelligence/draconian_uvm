@@ -9,9 +9,10 @@ import test
 
 lbc = filters.LineBroadcaster
 
+
 class UvmUtilityTestCase(test.TestCase):
     cut = UvmUtility
-    
+
     def test_uvm_component_util_match_expectation(self):
         """using uvm_component_utils in the right scope """
         content = StringIO("""
@@ -65,7 +66,11 @@ class UvmUtilityTestCase(test.TestCase):
         """)
         content = StringIO(content.getvalue())
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
             iut.error.assert_not_called()
 
@@ -78,9 +83,15 @@ class UvmUtilityTestCase(test.TestCase):
         """)
         content = StringIO(content.getvalue())
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
-            iut.error.assert_called_with(mock.ANY, mock.ANY, mock.ANY, "Class random is uvm_component but using uvm_object_utils, should replace it with uvm_component_utils")
+            iut.error.assert_called_with(
+                mock.ANY, mock.ANY, mock.ANY,
+                "Class random is uvm_component but using uvm_object_utils, should replace it with uvm_component_utils")
 
     def test_uvm_object_use_component_util(self):
         """using uvm_component_utils in the right scope """
@@ -92,9 +103,16 @@ class UvmUtilityTestCase(test.TestCase):
         """)
         content = StringIO(content.getvalue())
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
-            iut.error.assert_called_with(mock.ANY, mock.ANY, mock.ANY, "Class a_seq_c is uvm_object but using uvm_component_utils, should replace it with uvm_object_utils")
+            iut.error.assert_called_with(
+                mock.ANY, mock.ANY, mock.ANY,
+                "Class a_seq_c is uvm_object but using uvm_component_utils, should replace it with uvm_object_utils")
+
 
 if __name__ == '__main__':
     unittest.main()

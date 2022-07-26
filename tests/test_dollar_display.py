@@ -9,6 +9,7 @@ import test
 
 lbc = filters.LineBroadcaster
 
+
 class DollarDisplayTestCase(test.TestCase):
 
     cut = DollarDisplay
@@ -19,7 +20,11 @@ class DollarDisplayTestCase(test.TestCase):
         some other content
         """)
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
             iut.error.assert_not_called()
 
@@ -29,9 +34,14 @@ class DollarDisplayTestCase(test.TestCase):
         $display("Some unconditional message");
         """)
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
             iut.error.assert_called_with(mock.ANY, mock.ANY, mock.ANY, "Do not use $display. Use `uvm_info instead.")
-            
+
+
 if __name__ == '__main__':
     unittest.main()

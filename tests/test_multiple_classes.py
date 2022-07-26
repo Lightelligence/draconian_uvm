@@ -9,6 +9,7 @@ import test
 
 lbc = filters.LineBroadcaster
 
+
 class MultipleClassesTestCase(test.TestCase):
     cut = MultipleClasses
 
@@ -25,7 +26,11 @@ class MultipleClassesTestCase(test.TestCase):
         content = StringIO(content.getvalue())
 
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
             iut.error.assert_not_called()
 
@@ -42,10 +47,16 @@ class MultipleClassesTestCase(test.TestCase):
         content = StringIO(content.getvalue())
 
         with mock.patch.object(self.cut, "error", autospec=True):
-            lb = lbc("/tests/base_test.sv", content, parent=None, gc=None, restrictions=self.build_restriction_filter(self.cut))
+            lb = lbc("/tests/base_test.sv",
+                     content,
+                     parent=None,
+                     gc=None,
+                     restrictions=self.build_restriction_filter(self.cut))
             iut = self.get_listener(lb, self.cut)
-            iut.error.assert_called_with(mock.ANY, mock.ANY, mock.ANY, "class special_cfg_c looks like a 'helper' class, but exceeds 100 lines. It deserves its own file.")
+            iut.error.assert_called_with(
+                mock.ANY, mock.ANY, mock.ANY,
+                "class special_cfg_c looks like a 'helper' class, but exceeds 100 lines. It deserves its own file.")
 
-            
+
 if __name__ == "__main__":
     unittest.main()

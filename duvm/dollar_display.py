@@ -7,14 +7,13 @@ import re
 # Draconian UVM imports
 from duvm import filters
 
+
 class DollarDisplay(filters.LineListener):
     """Ban $display in favor of `uvm_info
 
     $display is an unconditional print.
     """
-    subscribe_to = [filters.TestbenchTopLineBroadcaster,
-                    filters.TestLineBroadcaster,
-                    filters.UVCLineBroadcaster]
+    subscribe_to = [filters.TestbenchTopLineBroadcaster, filters.TestLineBroadcaster, filters.UVCLineBroadcaster]
 
     display_re = re.compile("^\s*\$display")
 

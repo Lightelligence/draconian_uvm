@@ -7,14 +7,13 @@ import re
 # Draconian UVM imports
 from duvm import filters
 
+
 class AssertRandomize(filters.LineListener):
     """Check for assertions wrapping randomize calls.
 
     Quickly fail the test if randomization fails.
     """
-    subscribe_to = [filters.TestbenchTopLineBroadcaster,
-                    filters.TestLineBroadcaster,
-                    filters.UVCLineBroadcaster]
+    subscribe_to = [filters.TestbenchTopLineBroadcaster, filters.TestLineBroadcaster, filters.UVCLineBroadcaster]
 
     randomize_re = re.compile("(((\.)|(std::))randomize)\(")
     assert_re = re.compile("^\s*(//)*\s*`cmn_assert\(")
