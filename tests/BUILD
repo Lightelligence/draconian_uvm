@@ -30,5 +30,4 @@ buildifier(
 
 glob_to_individual_py_tests(
     files = glob(["test_*.py"]),
-    lib = "//:lib"
 )
