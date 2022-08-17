@@ -25,20 +25,19 @@ class MultipleClasses(filters.LineListener):
       2. Sequence libraries by definition have multiple class definitions.
          They are exempt from this rule.
     """
-    subscribe_to = [filters.BeginClassBroadcaster,
-                    filters.EndClassBroadcaster]
+    subscribe_to = [filters.BeginClassBroadcaster, filters.EndClassBroadcaster]
 
     size_threshold = 100
 
     exempt_files_re = re.compile("_((vseq)|(seq)|(seq_lib))\.sv[h]?")
 
     class svclass(object):
+
         def __init__(self, name, begin_line_no, begin_line):
             self.name = name
             self.begin_line_no = begin_line_no
             self.begin_line = begin_line
             self.end_line_no = None
-    
 
     def __init__(self, filename, fstream, *args, **kwargs):
         super(MultipleClasses, self).__init__(filename, fstream, *args, **kwargs)
@@ -66,7 +65,7 @@ class MultipleClasses(filters.LineListener):
 
         if len(self.sv_classes) <= 1:
             return
-        
+
         file_base_name = os.path.splitext(os.path.basename(self.filename))[0]
         class_name_regex = re.compile("(.*)_c")
         primary_c = None
@@ -84,11 +83,7 @@ class MultipleClasses(filters.LineListener):
             else:
                 size = c.end_line_no - c.begin_line_no
                 if size > self.size_threshold:
-                    self.error(c.begin_line_no, c.begin_line, "class {} looks like a 'helper' class, but exceeds {} lines. It deserves its own file.".format(c.name, self.size_threshold))
-
-
-
-        
-            
-
-    
+                    self.error(
+                        c.begin_line_no, c.begin_line,
+                        "class {} looks like a 'helper' class, but exceeds {} lines. It deserves its own file.".format(
+                            c.name, self.size_threshold))

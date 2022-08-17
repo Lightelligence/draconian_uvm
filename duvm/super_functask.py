@@ -14,28 +14,28 @@ class SuperFuncTask(filters.LineListener):
      super function name should match with current scope
     """
 
-    subscribe_to = [filters.BeginFunctionBroadcaster, 
-                    filters.EndFunctionBroadcaster,
-                    filters.BeginTaskBroadcaster, 
-                    filters.EndTaskBroadcaster,
-                    filters.TestLineBroadcaster,
-                    filters.UVCLineBroadcaster]
+    subscribe_to = [
+        filters.BeginFunctionBroadcaster, filters.EndFunctionBroadcaster, filters.BeginTaskBroadcaster,
+        filters.EndTaskBroadcaster, filters.TestLineBroadcaster, filters.UVCLineBroadcaster
+    ]
 
     super_re = re.compile(r"^\s*super\.([^ ]+)\(.*")
     scopedname_re = re.compile(r"::\s*([^ \#]+)")
 
     class svfunction(object):
+
         def __init__(self, name, begin_line_no, begin_line):
             self.name = name
             self.begin_line_no = begin_line_no
             self.begin_line = begin_line
 
     class svtask(object):
+
         def __init__(self, name, begin_line_no, begin_line):
             self.name = name
             self.begin_line_no = begin_line_no
             self.begin_line = begin_line
-    
+
     def __init__(self, filename, fstream, *args, **kwargs):
         super(SuperFuncTask, self).__init__(filename, fstream, *args, **kwargs)
         self.sv_functions = []
@@ -86,10 +86,14 @@ class SuperFuncTask(filters.LineListener):
         if supermatch:
             if not self.current_func == None:
                 if not self.current_func.name == supermatch.group(1):
-                    self.error(line_no, line, "Super called with {}, but not matching current function name: {}".format(supermatch.group(1), self.current_func.name))
+                    self.error(
+                        line_no, line, "Super called with {}, but not matching current function name: {}".format(
+                            supermatch.group(1), self.current_func.name))
             elif not self.current_task == None:
                 if not self.current_task.name == supermatch.group(1):
-                    self.error(line_no, line, "Super called with {}, but not matching current task name: {}".format(supermatch.group(1), self.current_task.name))
+                    self.error(
+                        line_no, line, "Super called with {}, but not matching current task name: {}".format(
+                            supermatch.group(1), self.current_task.name))
 
     update_uvcline = _update
     update_testline = _update
