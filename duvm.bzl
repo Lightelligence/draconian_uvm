@@ -1,10 +1,12 @@
 """Top-level macro for running draconian_uvm tests."""
 
+load("@rules_python//python:defs.bzl", "py_test")
+
 def duvm_test(name, srcs, tags = []):
     """Run draconian_uvm on source files."""
     data = srcs + ["@draconian_uvm//:duvm/lw_rc.py", "@draconian_uvm//:lib"]
 
-    native.py_test(
+    py_test(
         name = name,
         srcs = ["@lintworks//:main"],
         data = data,
