@@ -16,7 +16,7 @@ def duvm_test(name, srcs, ignored = [], waivers = [], tags = []):
     for igrc in ignore_config:
         args.append("--igrc $(location {})".format(igrc))
 
-    py_test(
+    native.py_test(
         name = name,
         srcs = ["@lintworks//:main"],
         data = data,
