@@ -1,3 +1,5 @@
+"""DUVM"""
+
 def duvm_test(name, srcs, ignored = [], waivers = [], tags = []):
     """Run draconian_uvm on source files."""
     ignore_config = ["//digital/rtl/scripts:duvm.ignore"] + waivers
